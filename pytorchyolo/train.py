@@ -258,7 +258,7 @@ def run():
             print("Loss", float(loss_components[3]))
             trainingLosses.append(float(loss_components[3]))
 
-    with open("../loss_logs/training_losses.txt", "w") as lossFile:
+    with open("training_losses.txt", "w") as lossFile:
         for val in trainingLosses:
             lossFile.write(val+"\n")
 
