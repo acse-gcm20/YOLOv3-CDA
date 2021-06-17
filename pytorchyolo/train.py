@@ -146,12 +146,13 @@ def run():
     else:
         print("Unknown optimizer. Please choose between (adam, sgd).")
 
+    trainingLosses = []
+
     for epoch in range(args.epochs):
 
         print("\n---- Training Model ----")
 
         model.train()  # Set model to training mode
-        trainingLosses = []
 
         for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
             batches_done = len(dataloader) * epoch + batch_i
