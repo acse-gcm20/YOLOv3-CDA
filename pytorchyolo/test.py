@@ -17,6 +17,7 @@ from pytorchyolo.utils.utils import load_classes, ap_per_class, get_batch_statis
 from pytorchyolo.utils.datasets import ListDataset
 from pytorchyolo.utils.transforms import DEFAULT_TRANSFORMS
 from pytorchyolo.utils.parse_config import parse_data_config
+from pytorchyolo.utils.loss import compute_loss
 
 def evaluate_model_file(model_path, weights_path, img_path, class_names, batch_size=8, img_size=416,
                         n_cpu=8, iou_thres=0.5, conf_thres=0.5, nms_thres=0.5, verbose=True):
