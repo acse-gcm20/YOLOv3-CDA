@@ -260,7 +260,7 @@ def run():
 
     with open("../loss_logs/training_losses.txt", "w") as lossFile:
         for val in trainingLosses:
-            lossFile.write(trainingLosses+"\n")
+            lossFile.write(val+"\n")
 
 if __name__ == "__main__":
     run()

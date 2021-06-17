@@ -122,8 +122,8 @@ def _evaluate(model, dataloader, class_names, img_size, iou_thres, conf_thres, n
         print("---- No detections over whole validation set ----")
         return None
 
-    validationLoss, valLossComponents = compute_loss(outputs, targets, model)
-    print("Validation Loss:", float(valLossComponents[3]))
+    #validationLoss, valLossComponents = compute_loss(outputs, targets, model)
+    #print("Validation Loss:", float(valLossComponents[3]))
 
     # Concatenate sample statistics
     true_positives, pred_scores, pred_labels = [
