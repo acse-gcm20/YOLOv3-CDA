@@ -251,6 +251,7 @@ def run():
                     ("validation/mAP", AP.mean()),
                     ("validation/f1", f1.mean())]
                 logger.list_of_scalars_summary(evaluation_metrics, epoch)
+                print(evaluation_metrics)
 
 
 if __name__ == "__main__":
