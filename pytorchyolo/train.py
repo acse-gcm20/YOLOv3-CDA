@@ -58,6 +58,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 
 
 def run():
+    print("------\nWe're training boyos\n------\n")
     print_environment_info()
     parser = argparse.ArgumentParser(description="Trains the YOLO model.")
     parser.add_argument("-m", "--model", type=str, default="config/yolov3.cfg", help="Path to model definition file (.cfg)")
