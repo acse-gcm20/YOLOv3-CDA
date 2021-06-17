@@ -128,6 +128,9 @@ def _evaluate(model, dataloader, class_names, img_size, iou_thres, conf_thres, n
     metrics_output = ap_per_class(
         true_positives, pred_scores, pred_labels, labels)
 
+    val_loss, val_loss_components = compute_loss(pred_labels, labels, model)
+    print("\nValidation Loss", float(val_loss_components[3]))
+
     print_eval_stats(metrics_output, class_names, verbose)
 
     return metrics_output
