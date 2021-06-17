@@ -151,6 +151,7 @@ def run():
         print("\n---- Training Model ----")
 
         model.train()  # Set model to training mode
+        trainingLosses = []
 
         for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
             batches_done = len(dataloader) * epoch + batch_i
@@ -255,7 +256,11 @@ def run():
             print("\nTraining Losses")
             print("IoU Loss", float(loss_components[0]))
             print("Loss", float(loss_components[3]))
+            trainingLosses.append(float(loss_components[3]))
 
+    with open("../loss_logs/training_losses.txt", "w") as lossFile:
+        for val in trainingLosses:
+            lossFile.write(trainingLosses+"\n")
 
 if __name__ == "__main__":
     run()
