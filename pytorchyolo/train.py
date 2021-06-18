@@ -221,15 +221,16 @@ def run():
         # Validation
         # #############
 
-        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(validation_dataloader, desc=f"Validating: {epoch}")):
-            batches_done = len(dataloader) * epoch + batch_i
+        with torch.no_grad():
+            for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(validation_dataloader, desc=f"Validating: {epoch}")):
+                batches_done = len(validation_dataloader) * epoch + batch_i
 
-            imgs = imgs.to(device, non_blocking=True)
-            targets = targets.to(device)
+                imgs = imgs.to(device, non_blocking=True)
+                targets = targets.to(device)
 
-            outputs = model(imgs)
+                outputs = model(imgs)
 
-            val_loss, val_loss_components = compute_loss(outputs, targets, model)
+                val_loss, val_loss_components = compute_loss(outputs, targets, model)
 
         print("\nValidation loss:", float(val_loss_components[3]), "\n")
 
