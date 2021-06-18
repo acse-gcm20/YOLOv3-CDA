@@ -147,6 +147,7 @@ def run():
         print("Unknown optimizer. Please choose between (adam, sgd).")
 
     trainingLosses = []
+    validationLosses = []
 
     for epoch in range(args.epochs):
 
@@ -232,8 +233,6 @@ def run():
 
                 val_loss, val_loss_components = compute_loss(outputs, targets, model)
 
-        print("\nValidation loss:", float(val_loss_components[3]), "\n")
-
         # #############
         # Save progress
         # #############
@@ -248,36 +247,41 @@ def run():
         # Evaluate
         # ########
 
-        if epoch % args.evaluation_interval == 0:
-            print("\n---- Evaluating Model ----")
-            # Evaluate the model on the validation set
-            metrics_output = _evaluate(
-                model,
-                validation_dataloader,
-                class_names,
-                img_size=model.hyperparams['height'],
-                iou_thres=args.iou_thres,
-                conf_thres=args.conf_thres,
-                nms_thres=args.nms_thres,
-                verbose=args.verbose
-            )
+        # if epoch % args.evaluation_interval == 0:
+        #     print("\n---- Evaluating Model ----")
+        #     # Evaluate the model on the validation set
+        #     metrics_output = _evaluate(
+        #         model,
+        #         validation_dataloader,
+        #         class_names,
+        #         img_size=model.hyperparams['height'],
+        #         iou_thres=args.iou_thres,
+        #         conf_thres=args.conf_thres,
+        #         nms_thres=args.nms_thres,
+        #         verbose=args.verbose
+        #     )
 
-            if metrics_output is not None:
-                precision, recall, AP, f1, ap_class = metrics_output
-                evaluation_metrics = [
-                    ("validation/precision", precision.mean()),
-                    ("validation/recall", recall.mean()),
-                    ("validation/mAP", AP.mean()),
-                    ("validation/f1", f1.mean())]
-                logger.list_of_scalars_summary(evaluation_metrics, epoch)
+        #     if metrics_output is not None:
+        #         precision, recall, AP, f1, ap_class = metrics_output
+        #         evaluation_metrics = [
+        #             ("validation/precision", precision.mean()),
+        #             ("validation/recall", recall.mean()),
+        #             ("validation/mAP", AP.mean()),
+        #             ("validation/f1", f1.mean())]
+        #         logger.list_of_scalars_summary(evaluation_metrics, epoch)
                 
-            print("\nTraining Losses")
-            print("IoU Loss", float(loss_components[0]))
-            print("Loss", float(loss_components[3]))
+            print("\nTraining Loss", float(loss_components[3]))
             trainingLosses.append(float(loss_components[3]))
+
+            print("\nValidation loss:", float(val_loss_components[3]))
+            validationLosses.append(float(val_loss_components[3]))
 
     with open("training_losses.txt", "w") as lossFile:
         for val in trainingLosses:
+            lossFile.write(str(val)+"\n")
+
+    with open("validation_losses.txt", "w") as lossFile:
+        for val in validationLosses:
             lossFile.write(str(val)+"\n")
 
 if __name__ == "__main__":
