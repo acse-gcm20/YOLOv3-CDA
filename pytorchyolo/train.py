@@ -269,11 +269,12 @@ def run():
         #             ("validation/mAP", AP.mean()),
         #             ("validation/f1", f1.mean())]
         #         logger.list_of_scalars_summary(evaluation_metrics, epoch)
-                
-            print("\nTraining Loss", float(loss_components[3]))
+
+            print("\n---Evaluation---")
+            print("Training Loss", float(loss_components[3]))
             trainingLosses.append(float(loss_components[3]))
 
-            print("\nValidation loss:", float(val_loss_components[3]))
+            print("Validation loss:", float(val_loss_components[3]))
             validationLosses.append(float(val_loss_components[3]))
 
     with open("training_losses.txt", "w") as lossFile:
