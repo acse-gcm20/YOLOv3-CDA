@@ -23,12 +23,7 @@ from pytorchyolo.test import _evaluate, _create_validation_data_loader
 from terminaltables import AsciiTable
 
 from torchsummary import summary
-flag_num = 0
 
-def flag(num):
-    print("---Flag", str(num)+"---")
-    num += 1
-    return num
 
 def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_training=False):
     """Creates a DataLoader for training.
@@ -160,19 +155,19 @@ def run():
 
         model.train()  # Set model to training mode
 
-        flag_num = flag(flag_num)
+        print("Flag 1")
 
         for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
             batches_done = len(dataloader) * epoch + batch_i
 
-            flag_num = flag(flag_num)
+            print("Flag 2")
 
             imgs = imgs.to(device, non_blocking=True)
             targets = targets.to(device)
-            flag_num = flag(flag_num)
+            print("Flag 3")
 
             outputs = model(imgs)
-            flag_num = flag(flag_num)
+            print("Flag 4")
 
             loss, loss_components = compute_loss(outputs, targets, model)
 
