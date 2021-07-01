@@ -84,10 +84,9 @@ class ListDataset(Dataset):
         #  Image
         # ---------
         try:
-            print("flag1")
             img_path = self.img_files[index % len(self.img_files)].rstrip()
-            print("flag2")
-            img = np.array(Image.open(img_path).convert('RGB'), dtype=np.uint8)
+            #img = np.array(Image.open(img_path).convert('RGB'), dtype=np.uint8)
+            img = np.array(Image.open(img_path), dtype=np.uint8)
         except Exception:
             print(f"Could not read image '{img_path}'.")
             return
