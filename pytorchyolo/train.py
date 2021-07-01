@@ -149,6 +149,8 @@ def run():
     trainingLosses = []
     validationLosses = []
 
+    print("Hello")
+
     for epoch in range(args.epochs):
 
         print("\n---- Training Model ----")
