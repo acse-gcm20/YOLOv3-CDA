@@ -41,6 +41,8 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     :return: Returns DataLoader
     :rtype: DataLoader
     """
+
+    print("hello")
     dataset = ListDataset(
         img_path,
         img_size=img_size,
