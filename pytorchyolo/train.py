@@ -78,10 +78,10 @@ def run():
     args = parser.parse_args()
     print(f"Command line arguments: {args}")
 
-    print("---\nFlag 1\n---")
-
     if args.seed != -1:
         provide_determinism(args.seed)
+
+    print("---\nFlag 1\n---")
 
     logger = Logger(args.logdir)  # Tensorboard logger
 
