@@ -78,10 +78,14 @@ def run():
     args = parser.parse_args()
     print(f"Command line arguments: {args}")
 
+    print("---\nFlag 1\n---")
+
     if args.seed != -1:
         provide_determinism(args.seed)
 
     logger = Logger(args.logdir)  # Tensorboard logger
+
+    print("---\nFlag 2\n---")
 
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
@@ -100,6 +104,8 @@ def run():
 
     model = load_model(args.model, args.pretrained_weights)
 
+    print("---\nFlag 3\n---")
+
     # Print model
     if args.verbose:
         summary(model, input_size=(3, model.hyperparams['height'], model.hyperparams['height']))
@@ -109,6 +115,8 @@ def run():
     # #################
     # Create Dataloader
     # #################
+
+    print("---\nFlag 4\n---")
 
     # Load training dataloader
     dataloader = _create_data_loader(
@@ -124,6 +132,8 @@ def run():
         mini_batch_size,
         model.hyperparams['height'],
         args.n_cpu)
+
+    print("---\nFlag 5\n---")
 
     # ################
     # Create optimizer
@@ -149,7 +159,7 @@ def run():
     trainingLosses = []
     validationLosses = []
 
-    print("Hello")
+    print("---\nFlag 6\n---")
 
     for epoch in range(args.epochs):
 
