@@ -42,7 +42,6 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     :rtype: DataLoader
     """
 
-    print("hello")
     dataset = ListDataset(
         img_path,
         img_size=img_size,
@@ -56,6 +55,8 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
         pin_memory=True,
         collate_fn=dataset.collate_fn,
         worker_init_fn=worker_seed_set)
+
+    print(dataloader)
     return dataloader
 
 
