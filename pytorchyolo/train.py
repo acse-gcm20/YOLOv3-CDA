@@ -56,7 +56,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
         collate_fn=dataset.collate_fn,
         worker_init_fn=worker_seed_set)
 
-    print(dataloader)
+    print(dataloader.len())
     return dataloader
 
 
