@@ -20,9 +20,9 @@ from pytorchyolo.utils.utils import load_classes, rescale_boxes, non_max_suppres
 from pytorchyolo.utils.datasets import ImageFolder
 from pytorchyolo.utils.transforms import Resize, DEFAULT_TRANSFORMS
 
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.ticker import NullLocator
+#import matplotlib.pyplot as plt
+#import matplotlib.patches as patches
+#from matplotlib.ticker import NullLocator
 
 
 def detect_directory(model_path, weights_path, img_path, classes, output_path,
