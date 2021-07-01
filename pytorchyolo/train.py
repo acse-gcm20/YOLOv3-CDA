@@ -157,7 +157,8 @@ def run():
 
         print("Flag 1")
 
-        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        #for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (_, imgs, targets) in enumerate(dataloader):
             print("Flag 2")
             batches_done = len(dataloader) * epoch + batch_i
 
