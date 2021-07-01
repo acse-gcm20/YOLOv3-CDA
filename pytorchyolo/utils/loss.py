@@ -189,7 +189,6 @@ def compute_loss(predictions, targets, model):  # predictions, targets, model
     #lbox *= 0.05 * (3. / 2)
     #lobj *= (3. / 2)
     #lcls *= 0.31
-    lcls = 0
     batch_size = tobj.shape[0]  # batch size
 
     loss = lbox + lobj + lcls
