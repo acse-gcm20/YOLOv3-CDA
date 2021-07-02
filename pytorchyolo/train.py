@@ -77,8 +77,7 @@ def run():
     parser.add_argument("--logdir", type=str, default="logs", help="Directory for training log files (e.g. for TensorBoard)")
     parser.add_argument("--seed", type=int, default=-1, help="Makes results reproducable. Set -1 to disable.")
     args = parser.parse_args()
-    print("flag1")
-    print(f"flag 2 Command line arguments: {args}")
+    print(f"Command line arguments: {args}")
 
     if args.seed != -1:
         provide_determinism(args.seed)
@@ -187,7 +186,7 @@ def run():
                         if batches_done > threshold:
                             lr *= value
                 # Log the learning rate
-                logger.scalar_summary("train/learning_rate", lr, batches_done)
+                #logger.scalar_summary("train/learning_rate", lr, batches_done)
                 # Set learning rate
                 for g in optimizer.param_groups:
                     g['lr'] = lr
@@ -217,7 +216,7 @@ def run():
                 ("train/obj_loss", float(loss_components[1])),
                 ("train/class_loss", float(loss_components[2])),
                 ("train/loss", to_cpu(loss).item())]
-            logger.list_of_scalars_summary(tensorboard_log, batches_done)
+            #logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
             model.seen += imgs.size(0)
 
