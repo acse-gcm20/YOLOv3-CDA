@@ -82,8 +82,8 @@ def run():
     if args.seed != -1:
         provide_determinism(args.seed)
 
-    print("Creating Tensorboard logger")
-    logger = Logger(args.logdir)  # Tensorboard logger
+    #print("Creating Tensorboard logger")
+    #logger = Logger(args.logdir)  # Tensorboard logger
 
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
