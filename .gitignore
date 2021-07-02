@@ -10,4 +10,3 @@ weights/*.weights
 __pycache__
 
 .vscode/
-logs/
