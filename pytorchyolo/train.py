@@ -30,7 +30,7 @@ class Args:
         self.data = 'config/custom.data'
         self.epochs = 5
         self.verbose = False
-        self.n_cpu = 2
+        self.n_cpu = 1
         self.pretrained_weights = None
         self.checkpoint_interval = 1
         self.evaluation_interval = 1
