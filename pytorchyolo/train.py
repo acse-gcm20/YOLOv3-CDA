@@ -97,7 +97,7 @@ def run(epochs, seed, verbose=False):
     # args = parser.parse_args()
 
     args = Args(epochs, seed, verbose)
-    print(f"Command line arguments: {args}")
+    #print(f"Command line arguments: {args}")
 
     if args.seed != -1:
         provide_determinism(args.seed)
