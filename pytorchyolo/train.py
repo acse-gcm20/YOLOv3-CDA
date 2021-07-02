@@ -76,17 +76,17 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 
 def run():
     print("\n------\nTraining\n------\n")
-    args = Args()
+    training_args = Args()
 
-    if args.seed != -1:
-        provide_determinism(args.seed)
+    if training_args.seed != -1:
+        provide_determinism(training_args.seed)
 
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
     os.makedirs("checkpoints", exist_ok=True)
 
     # Get data configuration
-    data_config = parse_data_config(args.data)
+    data_config = parse_data_config(training_args.data)
     train_path = data_config["train"]
     valid_path = data_config["valid"]
     class_names = load_classes(data_config["names"])
@@ -96,10 +96,10 @@ def run():
     # Create model
     # ############
 
-    model = load_model(args.model, args.pretrained_weights)
+    model = load_model(training_args.model, training_args.pretrained_weights)
 
     # Print model
-    if args.verbose:
+    if training_args.verbose:
         summary(model, input_size=(3, model.hyperparams['height'], model.hyperparams['height']))
 
     mini_batch_size = model.hyperparams['batch'] // model.hyperparams['subdivisions']
@@ -113,15 +113,15 @@ def run():
         train_path,
         mini_batch_size,
         model.hyperparams['height'],
-        args.n_cpu,
-        args.multiscale_training)
+        training_args.n_cpu,
+        training_args.multiscale_training)
 
     # Load validation dataloader
     validation_dataloader = _create_validation_data_loader(
         valid_path,
         mini_batch_size,
         model.hyperparams['height'],
-        args.n_cpu)
+        training_args.n_cpu)
 
     # ################
     # Create optimizer
@@ -147,7 +147,7 @@ def run():
     trainingLosses = []
     validationLosses = []
 
-    for epoch in range(args.epochs):
+    for epoch in range(training_args.epochs):
 
         print("\n---- Training Model ----")
 
@@ -195,7 +195,7 @@ def run():
             # ############
             # Log progress
             # ############
-            if args.verbose:
+            if training_args.verbose:
                 print(AsciiTable(
                     [
                         ["Type", "Value"],
@@ -236,7 +236,7 @@ def run():
         # #############
 
         # Save model to checkpoint file
-        if epoch % args.checkpoint_interval == 0:
+        if epoch % training_args.checkpoint_interval == 0:
             checkpoint_path = f"checkpoints/yolov3_ckpt_{epoch}.pth"
             print(f"---- Saving checkpoint to: '{checkpoint_path}' ----")
             torch.save(model.state_dict(), checkpoint_path)
@@ -245,7 +245,7 @@ def run():
         # Evaluate
         # ########
 
-        # if epoch % args.evaluation_interval == 0:
+        # if epoch % training_args.evaluation_interval == 0:
         #     print("\n---- Evaluating Model ----")
         #     # Evaluate the model on the validation set
         #     metrics_output = _evaluate(
@@ -253,10 +253,10 @@ def run():
         #         validation_dataloader,
         #         class_names,
         #         img_size=model.hyperparams['height'],
-        #         iou_thres=args.iou_thres,
-        #         conf_thres=args.conf_thres,
-        #         nms_thres=args.nms_thres,
-        #         verbose=args.verbose
+        #         iou_thres=training_args.iou_thres,
+        #         conf_thres=training_args.conf_thres,
+        #         nms_thres=training_args.nms_thres,
+        #         verbose=training_args.verbose
         #     )
 
         #     if metrics_output is not None:
