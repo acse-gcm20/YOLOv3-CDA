@@ -30,7 +30,7 @@ class Args:
         self.data = 'config/custom.data'
         self.epochs = 5
         self.verbose = False
-        self.n_cpu = 8
+        self.n_cpu = 2
         self.pretrained_weights = None
         self.checkpoint_interval = 1
         self.evaluation_interval = 1
@@ -75,7 +75,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 
 
 def run():
-    print("\n------\nTraining\n------\n")
+    print("\n------\nNow Training\n------\n")
     training_args = Args()
 
     if training_args.seed != -1:
