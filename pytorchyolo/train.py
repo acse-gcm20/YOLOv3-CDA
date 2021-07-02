@@ -3,7 +3,6 @@
 from __future__ import division
 
 import os
-import argparse
 import tqdm
 
 import torch
@@ -77,33 +76,10 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 
 def run():
     print("\n------\nTraining\n------\n")
-    print_environment_info()
-
-    # parser = argparse.ArgumentParser(description="Trains the YOLO model.")
-    # parser.add_argument("-m", "--model", type=str, default="config/yolov3.cfg", help="Path to model definition file (.cfg)")
-    # parser.add_argument("-d", "--data", type=str, default="config/coco.data", help="Path to data config file (.data)")
-    # parser.add_argument("-e", "--epochs", type=int, default=300, help="Number of epochs")
-    # parser.add_argument("-v", "--verbose", action='store_true', help="Makes the training more verbose")
-    # parser.add_argument("--n_cpu", type=int, default=8, help="Number of cpu threads to use during batch generation")
-    # parser.add_argument("--pretrained_weights", type=str, help="Path to checkpoint file (.weights or .pth). Starts training from checkpoint model")
-    # parser.add_argument("--checkpoint_interval", type=int, default=1, help="Interval of epochs between saving model weights")
-    # parser.add_argument("--evaluation_interval", type=int, default=1, help="Interval of epochs between evaluations on validation set")
-    # parser.add_argument("--multiscale_training", action="store_false", help="Allow for multi-scale training")
-    # parser.add_argument("--iou_thres", type=float, default=0.5, help="Evaluation: IOU threshold required to qualify as detected")
-    # parser.add_argument("--conf_thres", type=float, default=0.1, help="Evaluation: Object confidence threshold")
-    # parser.add_argument("--nms_thres", type=float, default=0.5, help="Evaluation: IOU threshold for non-maximum suppression")
-    # parser.add_argument("--logdir", type=str, default="logs", help="Directory for training log files (e.g. for TensorBoard)")
-    # parser.add_argument("--seed", type=int, default=-1, help="Makes results reproducable. Set -1 to disable.")
-    # args = parser.parse_args()
-
-    args = Args(epochs, seed, verbose)
-    #print(f"Command line arguments: {args}")
+    args = Args()
 
     if args.seed != -1:
         provide_determinism(args.seed)
-
-    #print("Creating Tensorboard logger")
-    #logger = Logger(args.logdir)  # Tensorboard logger
 
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
