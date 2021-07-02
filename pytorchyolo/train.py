@@ -82,7 +82,7 @@ def run():
     if args.seed != -1:
         provide_determinism(args.seed)
 
-    #logger = Logger(args.logdir)  # Tensorboard logger
+    logger = Logger(args.logdir)  # Tensorboard logger
 
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
@@ -156,20 +156,13 @@ def run():
 
         model.train()  # Set model to training mode
 
-        print("Flag 1")
-
         for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
-            print("Flag 2")
             batches_done = len(dataloader) * epoch + batch_i
-
-            print("Flag 3")
 
             imgs = imgs.to(device, non_blocking=True)
             targets = targets.to(device)
             
-
             outputs = model(imgs)
-            print("Flag 4")
 
             loss, loss_components = compute_loss(outputs, targets, model)
 
