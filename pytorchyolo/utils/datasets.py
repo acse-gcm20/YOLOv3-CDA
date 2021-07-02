@@ -80,7 +80,6 @@ class ListDataset(Dataset):
         self.transform = transform
 
     def __getitem__(self, index):
-        print("Getting Item")
         # ---------
         #  Image
         # ---------
