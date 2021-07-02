@@ -3,7 +3,6 @@
 from __future__ import division
 
 import os
-import argparse
 import tqdm
 
 import torch
@@ -24,6 +23,23 @@ from terminaltables import AsciiTable
 
 from torchsummary import summary
 
+
+class Args:
+    def __init__(self):
+        self.model = 'yolov3.cfg'
+        self.data = 'config/custom.data'
+        self.epochs = 5
+        self.verbose = False
+        self.n_cpu = 1
+        self.pretrained_weights = None
+        self.checkpoint_interval = 1
+        self.evaluation_interval = 1
+        self.multiscale_training = True
+        self.iou_thres = 0.5
+        self.conf_thres = 0.1
+        self.nms_thres = 0.5
+        self.logdir = 'logs'
+        self.seed = 42
 
 def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_training=False):
     """Creates a DataLoader for training.
@@ -58,41 +74,19 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     return dataloader
 
 
-def run(cmd=True):
+def run():
     print("\n------\nTraining\n------\n")
-    print_environment_info()
+    training_args = Args()
 
-    if cmd:
-        parser = argparse.ArgumentParser(description="Trains the YOLO model.")
-        parser.add_argument("-m", "--model", type=str, default="config/yolov3.cfg", help="Path to model definition file (.cfg)")
-        parser.add_argument("-d", "--data", type=str, default="config/coco.data", help="Path to data config file (.data)")
-        parser.add_argument("-e", "--epochs", type=int, default=300, help="Number of epochs")
-        parser.add_argument("-v", "--verbose", action='store_true', help="Makes the training more verbose")
-        parser.add_argument("--n_cpu", type=int, default=8, help="Number of cpu threads to use during batch generation")
-        parser.add_argument("--pretrained_weights", type=str, help="Path to checkpoint file (.weights or .pth). Starts training from checkpoint model")
-        parser.add_argument("--checkpoint_interval", type=int, default=1, help="Interval of epochs between saving model weights")
-        parser.add_argument("--evaluation_interval", type=int, default=1, help="Interval of epochs between evaluations on validation set")
-        parser.add_argument("--multiscale_training", action="store_false", help="Allow for multi-scale training")
-        parser.add_argument("--iou_thres", type=float, default=0.5, help="Evaluation: IOU threshold required to qualify as detected")
-        parser.add_argument("--conf_thres", type=float, default=0.1, help="Evaluation: Object confidence threshold")
-        parser.add_argument("--nms_thres", type=float, default=0.5, help="Evaluation: IOU threshold for non-maximum suppression")
-        parser.add_argument("--logdir", type=str, default="logs", help="Directory for training log files (e.g. for TensorBoard)")
-        parser.add_argument("--seed", type=int, default=-1, help="Makes results reproducable. Set -1 to disable.")
-        args = parser.parse_args()
-    print(f"Command line arguments: {args}")
-
-    if args.seed != -1:
-        provide_determinism(args.seed)
-
-    #print("Creating Tensorboard logger")
-    #logger = Logger(args.logdir)  # Tensorboard logger
+    if training_args.seed != -1:
+        provide_determinism(training_args.seed)
 
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
     os.makedirs("checkpoints", exist_ok=True)
 
     # Get data configuration
-    data_config = parse_data_config(args.data)
+    data_config = parse_data_config(training_args.data)
     train_path = data_config["train"]
     valid_path = data_config["valid"]
     class_names = load_classes(data_config["names"])
@@ -102,10 +96,10 @@ def run(cmd=True):
     # Create model
     # ############
 
-    model = load_model(args.model, args.pretrained_weights)
+    model = load_model(training_args.model, training_args.pretrained_weights)
 
     # Print model
-    if args.verbose:
+    if training_args.verbose:
         summary(model, input_size=(3, model.hyperparams['height'], model.hyperparams['height']))
 
     mini_batch_size = model.hyperparams['batch'] // model.hyperparams['subdivisions']
@@ -119,15 +113,15 @@ def run(cmd=True):
         train_path,
         mini_batch_size,
         model.hyperparams['height'],
-        args.n_cpu,
-        args.multiscale_training)
+        training_args.n_cpu,
+        training_args.multiscale_training)
 
     # Load validation dataloader
     validation_dataloader = _create_validation_data_loader(
         valid_path,
         mini_batch_size,
         model.hyperparams['height'],
-        args.n_cpu)
+        training_args.n_cpu)
 
     # ################
     # Create optimizer
@@ -153,7 +147,7 @@ def run(cmd=True):
     trainingLosses = []
     validationLosses = []
 
-    for epoch in range(args.epochs):
+    for epoch in range(training_args.epochs):
 
         print("\n---- Training Model ----")
 
@@ -201,7 +195,7 @@ def run(cmd=True):
             # ############
             # Log progress
             # ############
-            if args.verbose:
+            if training_args.verbose:
                 print(AsciiTable(
                     [
                         ["Type", "Value"],
@@ -242,7 +236,7 @@ def run(cmd=True):
         # #############
 
         # Save model to checkpoint file
-        if epoch % args.checkpoint_interval == 0:
+        if epoch % training_args.checkpoint_interval == 0:
             checkpoint_path = f"checkpoints/yolov3_ckpt_{epoch}.pth"
             print(f"---- Saving checkpoint to: '{checkpoint_path}' ----")
             torch.save(model.state_dict(), checkpoint_path)
@@ -251,7 +245,7 @@ def run(cmd=True):
         # Evaluate
         # ########
 
-        # if epoch % args.evaluation_interval == 0:
+        # if epoch % training_args.evaluation_interval == 0:
         #     print("\n---- Evaluating Model ----")
         #     # Evaluate the model on the validation set
         #     metrics_output = _evaluate(
@@ -259,10 +253,10 @@ def run(cmd=True):
         #         validation_dataloader,
         #         class_names,
         #         img_size=model.hyperparams['height'],
-        #         iou_thres=args.iou_thres,
-        #         conf_thres=args.conf_thres,
-        #         nms_thres=args.nms_thres,
-        #         verbose=args.verbose
+        #         iou_thres=training_args.iou_thres,
+        #         conf_thres=training_args.conf_thres,
+        #         nms_thres=training_args.nms_thres,
+        #         verbose=training_args.verbose
         #     )
 
         #     if metrics_output is not None:
@@ -289,5 +283,5 @@ def run(cmd=True):
         for val in validationLosses:
             lossFile.write(str(val)+"\n")
 
-if __name__ == "__main__":
-    run()
+#if __name__ == "__main__":
+#    run()
