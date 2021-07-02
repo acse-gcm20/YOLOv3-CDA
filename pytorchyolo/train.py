@@ -75,7 +75,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 
 
 def run():
-    print("\n------\nNow Training\n------\n")
+    print("\n------\nTraining\n------\n")
     training_args = Args()
 
     if training_args.seed != -1:
