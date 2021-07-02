@@ -101,6 +101,7 @@ class ListDataset(Dataset):
                 warnings.simplefilter("ignore")
                 boxes = np.loadtxt(label_path).reshape(-1, 5)
         except Exception:
+            print(Exception)
             print(f"Could not read label '{label_path}'.")
             return
 
