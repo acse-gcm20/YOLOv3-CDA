@@ -26,7 +26,7 @@ from torchsummary import summary
 
 class Args:
     def __init__(self):
-        self.model = yolov3.cfg
+        self.model = 'yolov3.cfg'
         self.data = 'config/custom.data'
         self.epochs = 5
         self.verbose = False
