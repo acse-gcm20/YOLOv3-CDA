@@ -75,7 +75,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     return dataloader
 
 
-def run(epochs, seed, verbose=False):
+def run(epochs=10, seed=42, verbose=False):
     print("\n------\nTraining\n------\n")
     print_environment_info()
 
@@ -307,5 +307,5 @@ def run(epochs, seed, verbose=False):
         for val in validationLosses:
             lossFile.write(str(val)+"\n")
 
-if __name__ == "__main__":
-    run()
+#if __name__ == "__main__":
+#    run()
