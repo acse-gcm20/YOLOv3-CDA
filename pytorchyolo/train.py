@@ -78,7 +78,7 @@ def run():
     parser.add_argument("--seed", type=int, default=-1, help="Makes results reproducable. Set -1 to disable.")
     args = parser.parse_args()
     print("flag1")
-    print(f"Command line arguments: {args}")
+    print(f"flag 2 Command line arguments: {args}")
 
     if args.seed != -1:
         provide_determinism(args.seed)
