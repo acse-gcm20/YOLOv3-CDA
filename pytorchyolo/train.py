@@ -25,12 +25,12 @@ from torchsummary import summary
 
 
 class Args:
-    def __init__(self):
+    def __init__(self, epochs, seed):
         self.model = 'yolov3.cfg'
         self.data = 'config/custom.data'
-        self.epochs = 5
+        self.epochs = epochs
         self.verbose = False
-        self.n_cpu = 1
+        self.n_cpu = 8
         self.pretrained_weights = None
         self.checkpoint_interval = 1
         self.evaluation_interval = 1
@@ -39,7 +39,7 @@ class Args:
         self.conf_thres = 0.1
         self.nms_thres = 0.5
         self.logdir = 'logs'
-        self.seed = 42
+        self.seed = seed
 
 def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_training=False):
     """Creates a DataLoader for training.
@@ -74,9 +74,10 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     return dataloader
 
 
-def run():
+def run(epochs=10, seed=42):
     print("\n------\nTraining\n------\n")
-    args = Args()
+    args = Args(epochs, seed)
+    print(args, "\n")
 
     if args.seed != -1:
         provide_determinism(args.seed)
