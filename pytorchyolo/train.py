@@ -41,9 +41,9 @@ class Args:
         self.logdir = 'logs'
         self.seed = seed
 
-    def display(self):
-        for attr, value in self.__dict__items():
-            print(attr, value)
+    # def display(self):
+    #     for attr, value in self.__dict__items():
+    #         print(attr, value)
 
 def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_training=False):
     """Creates a DataLoader for training.
@@ -81,7 +81,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 def run(epochs=10, seed=42):
     print("\n------\nTraining\n------\n")
     args = Args(epochs, seed)
-    args.display()
+    # args.display()
 
     if args.seed != -1:
         provide_determinism(args.seed)
