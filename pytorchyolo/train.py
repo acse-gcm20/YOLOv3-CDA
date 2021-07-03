@@ -81,7 +81,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 def run(epochs=10, seed=42):
     print("\n------\nTraining\n------\n")
     args = Args(epochs, seed)
-    print(args, "\n")
+    args.display()
 
     if args.seed != -1:
         provide_determinism(args.seed)
