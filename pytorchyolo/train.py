@@ -30,7 +30,7 @@ class Args:
         self.data = 'config/custom.data'
         self.epochs = epochs
         self.verbose = False
-        self.n_cpu = 8
+        self.n_cpu = 2
         self.pretrained_weights = None
         self.checkpoint_interval = 1
         self.evaluation_interval = 1
@@ -81,7 +81,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 def run(epochs=10, seed=42):
     print("Training\n")
     args = Args(epochs, seed)
-    # args.display()
+    print("Epochs: {}\t Seed: {}".format(args.epochs, args.seed))
 
     if args.seed != -1:
         provide_determinism(args.seed)
@@ -159,6 +159,9 @@ def run(epochs=10, seed=42):
         model.train()  # Set model to training mode
 
         for batch_i, (_, imgs, targets) in enumerate(dataloader): #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+            
+            if batch_i % 10 == 0:
+                print("Epoch:", batch_i)
             batches_done = len(dataloader) * epoch + batch_i
 
             imgs = imgs.to(device, non_blocking=True)
