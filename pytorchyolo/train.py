@@ -152,13 +152,13 @@ def run(epochs=10, seed=42):
     trainingLosses = []
     validationLosses = []
 
-    for epoch in range(args.epochs):
+    for epoch in tqdm(range(args.epochs)):
 
         print("\n---- Training Model ----")
 
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (_, imgs, targets) in enumerate(dataloader): #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
             
             # if batch_i % 10 == 0:
             #     print("Batch {} of {}", batch_i)
@@ -229,7 +229,7 @@ def run(epochs=10, seed=42):
         # #############
 
         with torch.no_grad():
-            for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(validation_dataloader, desc=f"Validating: {epoch}")):
+            for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(validation_dataloader, desc="Validating:")):
                 batches_done = len(validation_dataloader) * epoch + batch_i
 
                 imgs = imgs.to(device, non_blocking=True)
