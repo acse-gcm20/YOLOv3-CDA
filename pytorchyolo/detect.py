@@ -115,7 +115,10 @@ def detect(weights, image_folder, image_paths):
     """Inferences images with model."""
     args = Args(weights, image_folder)
 
-    _create_data_loader(image_paths, args.batch_size, args.img_size, args.n_cpu)
+    dataloader = _create_data_loader(image_paths,
+                                     args.batch_size,
+                                     args.img_size,
+                                     args.n_cpu)
 
     model = load_model(args.model, args.weights)
 
