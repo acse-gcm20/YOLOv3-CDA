@@ -152,7 +152,7 @@ def run(epochs=10, seed=42):
     trainingLosses = []
     validationLosses = []
 
-    for epoch in tqdm(range(args.epochs)):
+    for epoch in tqdm.tqdm(range(args.epochs)):
 
         print("\n---- Training Model ----")
 
