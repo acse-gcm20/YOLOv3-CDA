@@ -158,7 +158,7 @@ def run(epochs=10, seed=42):
 
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
             
             # if batch_i % 10 == 0:
             #     print("Batch {} of {}", batch_i)
