@@ -110,20 +110,27 @@ def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
         detections = rescale_boxes(detections[0], img_size, image.shape[:2])
     return to_cpu(detections).numpy()
 
-
-def detect(weights, image_folder, image_paths):
-    """Inferences images with model."""
-    args = Args(weights, image_folder)
-
-    dataloader = _create_data_loader(image_paths,
-                                     args.batch_size,
-                                     args.img_size,
-                                     args.n_cpu)
-
-    model = load_model(args.model, args.weights)
-
+def detect(model, dataloader, output_path, img_size, conf_thres, nms_thres):
+    """Inferences images with model.
+    :param model: Model for inference
+    :type model: models.Darknet
+    :param dataloader: Dataloader provides the batches of images to inference
+    :type dataloader: DataLoader
+    :param output_path: Path to output directory
+    :type output_path: str
+    :param img_size: Size of each image dimension for yolo, defaults to 416
+    :type img_size: int, optional
+    :param conf_thres: Object confidence threshold, defaults to 0.5
+    :type conf_thres: float, optional
+    :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
+    :type nms_thres: float, optional
+    :return: List of detections. The coordinates are given for the padded image that is provided by the dataloader.
+        Use `utils.rescale_boxes` to transform them into the desired input image coordinate system before its transformed by the dataloader),
+        List of input image paths
+    :rtype: [Tensor], [str]
+    """
     # Create output directory, if missing
-    os.makedirs(args.output, exist_ok=True)
+    os.makedirs(output_path, exist_ok=True)
 
     model.eval()  # Set model to evaluation mode
 
@@ -139,12 +146,47 @@ def detect(weights, image_folder, image_paths):
         # Get detections
         with torch.no_grad():
             detections = model(input_imgs)
-            detections = non_max_suppression(detections, args.conf_thres, args.nms_thres)
+            detections = non_max_suppression(detections, conf_thres, nms_thres)
 
         # Store image and detections
         img_detections.extend(detections)
         imgs.extend(img_paths)
     return img_detections, imgs
+    
+# def detect(weights, image_folder, image_paths):
+#     """Inferences images with model."""
+#     args = Args(weights, image_folder)
+
+#     dataloader = _create_data_loader(image_paths,
+#                                      args.batch_size,
+#                                      args.img_size,
+#                                      args.n_cpu)
+
+#     model = load_model(args.model, args.weights)
+
+#     # Create output directory, if missing
+#     os.makedirs(args.output, exist_ok=True)
+
+#     model.eval()  # Set model to evaluation mode
+
+#     Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
+
+#     img_detections = []  # Stores detections for each image index
+#     imgs = []  # Stores image paths
+
+#     for (img_paths, input_imgs) in tqdm.tqdm(dataloader, desc="Detecting"):
+#         # Configure input
+#         input_imgs = Variable(input_imgs.type(Tensor))
+
+#         # Get detections
+#         with torch.no_grad():
+#             detections = model(input_imgs)
+#             detections = non_max_suppression(detections, args.conf_thres, args.nms_thres)
+
+#         # Store image and detections
+#         img_detections.extend(detections)
+#         imgs.extend(img_paths)
+#     return img_detections, imgs
 
 
 def _draw_and_save_output_images(img_detections, imgs, img_size, output_path, classes):
