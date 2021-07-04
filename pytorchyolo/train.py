@@ -79,7 +79,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 
 
 def run(epochs=10, seed=42):
-    print("\n------\nTraining\n------\n")
+    print("Training\n")
     args = Args(epochs, seed)
     # args.display()
 
@@ -158,7 +158,7 @@ def run(epochs=10, seed=42):
 
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (_, imgs, targets) in enumerate(dataloader) #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
             batches_done = len(dataloader) * epoch + batch_i
 
             imgs = imgs.to(device, non_blocking=True)
