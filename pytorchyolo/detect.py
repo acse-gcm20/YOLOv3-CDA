@@ -26,7 +26,7 @@ from matplotlib.ticker import NullLocator
 
 
 class Args:
-    def __init__(self, weights, images):
+    def __init__(self, weights, images, conf_thres=0.5):
         self.model = 'yolov3.cfg'
         self.weights = weights
         self.images = images
@@ -35,7 +35,7 @@ class Args:
         self.batch_size = 1
         self.img_size = 416
         self.n_cpu = 2
-        self.conf_thres = 0.5
+        self.conf_thres = conf_thres
         self.nms_thres = 0.4
 
 def detect_directory(model_path, weights_path, img_path, classes, output_path,
