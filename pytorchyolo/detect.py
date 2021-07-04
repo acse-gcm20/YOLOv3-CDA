@@ -25,6 +25,19 @@ import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 
 
+class Args:
+    def __init__(self, weights, images):
+        self.model = 'yolov3.cfg'
+        self.weights = weights
+        self.images = images
+        self.classes = 'data/classes.names'
+        self.output = 'output'
+        self.batch_size = 1
+        self.img_size = 416
+        self.n_cpu = 2
+        self.conf_thres = 0.5
+        self.nms_thres = 0.4
+
 def detect_directory(model_path, weights_path, img_path, classes, output_path,
                      batch_size=8, img_size=416, n_cpu=8, conf_thres=0.5, nms_thres=0.5):
     """Detects objects on all images in specified directory and saves output images with drawn detections.
@@ -98,26 +111,14 @@ def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
     return to_cpu(detections).numpy()
 
 
-def detect(model, dataloader, output_path, img_size, conf_thres, nms_thres):
-    """Inferences images with model.
+def detect(weights, image_folder, image_paths):
+    """Inferences images with model."""
+    args = Args(weights, image_folder)
 
-    :param model: Model for inference
-    :type model: models.Darknet
-    :param dataloader: Dataloader provides the batches of images to inference
-    :type dataloader: DataLoader
-    :param output_path: Path to output directory
-    :type output_path: str
-    :param img_size: Size of each image dimension for yolo, defaults to 416
-    :type img_size: int, optional
-    :param conf_thres: Object confidence threshold, defaults to 0.5
-    :type conf_thres: float, optional
-    :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
-    :type nms_thres: float, optional
-    :return: List of detections. The coordinates are given for the padded image that is provided by the dataloader.
-        Use `utils.rescale_boxes` to transform them into the desired input image coordinate system before its transformed by the dataloader),
-        List of input image paths
-    :rtype: [Tensor], [str]
-    """
+    _create_data_loader(image_paths, args.batch_size, args.img_size, args.n_cpu)
+
+    model = load_model(args.model, args.weights)
+
     # Create output directory, if missing
     os.makedirs(output_path, exist_ok=True)
 
