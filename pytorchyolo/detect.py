@@ -120,7 +120,7 @@ def detect(weights, image_folder, image_paths):
     model = load_model(args.model, args.weights)
 
     # Create output directory, if missing
-    os.makedirs(output_path, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     model.eval()  # Set model to evaluation mode
 
@@ -136,7 +136,7 @@ def detect(weights, image_folder, image_paths):
         # Get detections
         with torch.no_grad():
             detections = model(input_imgs)
-            detections = non_max_suppression(detections, conf_thres, nms_thres)
+            detections = non_max_suppression(detections, args.conf_thres, args.nms_thres)
 
         # Store image and detections
         img_detections.extend(detections)
