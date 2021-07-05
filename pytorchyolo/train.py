@@ -159,9 +159,8 @@ def run(epochs=10, seed=42, pretrained_weights=None):
         
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) in enumerate(dataloader): #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
-            # if batch_i % 10 == 0:
-            #     print("Batch {} of {}", batch_i)
+        for batch_i, (_, imgs, targets) in tqdm.tqdm(enumerate(dataloader)): #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+
             batches_done = len(dataloader) * epoch + batch_i
 
             imgs = imgs.to(device, non_blocking=True)
@@ -240,6 +239,21 @@ def run(epochs=10, seed=42, pretrained_weights=None):
                 outputs = model(imgs)
 
                 val_loss, val_loss_components = compute_loss(outputs, targets, model)
+
+        metrics_output = _evaluate(
+            model,
+            validation_dataloader,
+            class_names,
+            img_size=model.hyperparams['height'],
+            iou_thres=args.iou_thres,
+            conf_thres=args.conf_thres,
+            nms_thres=args.nms_thres,
+            verbose=args.verbose
+            
+        precision, recall, AP, f1, ap_class = metrics_output
+        print("Precision: {}, Recall: {}".format(precison.mean(), recall.mean()))
+
+        print()
 
         # #############
         # Save progress
