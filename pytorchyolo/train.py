@@ -159,7 +159,7 @@ def run(epochs=10, seed=42, pretrained_weights=None):
         
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) in tqdm.tqdm(enumerate(dataloader)): #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader)): #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
 
             batches_done = len(dataloader) * epoch + batch_i
 
@@ -227,7 +227,7 @@ def run(epochs=10, seed=42, pretrained_weights=None):
         # Validation
         # #############
 
-        print("---- Validating Model ----")
+        print("\n---- Validating Model ----")
 
         with torch.no_grad():
             for batch_i, (_, imgs, targets) in enumerate(validation_dataloader):
@@ -251,7 +251,7 @@ def run(epochs=10, seed=42, pretrained_weights=None):
             verbose=args.verbose)
 
         precision, recall, AP, f1, ap_class = metrics_output
-        print("Precision: {}, Recall: {}".format(precison.mean(), recall.mean()))
+        print("Precision: {}, Recall: {}".format(precision.mean(), recall.mean()))
 
         print()
 
