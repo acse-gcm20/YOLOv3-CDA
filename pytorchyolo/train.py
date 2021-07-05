@@ -311,9 +311,9 @@ def run(epochs=10, seed=42, pretrained_weights=None):
 
     with open("stats.txt", "w") as stats:
         for i in range(epochs):
-            stats.write("{} {} {} {}\n".format(trainingLosses[i]
-                                               validationLosses[i]
-                                               precisionVals[i]
+            stats.write("{} {} {} {}\n".format(trainingLosses[i],
+                                               validationLosses[i],
+                                               precisionVals[i],
                                                recallVals[i]))
 
 #if __name__ == "__main__":
