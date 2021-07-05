@@ -151,6 +151,8 @@ def run(epochs=10, seed=42, pretrained_weights=None):
 
     trainingLosses = []
     validationLosses = []
+    precisionVals = []
+    recallVals = []
 
     for epoch in range(args.epochs):
 
@@ -252,8 +254,8 @@ def run(epochs=10, seed=42, pretrained_weights=None):
 
         precision, recall, AP, f1, ap_class = metrics_output
         print("Precision: {}, Recall: {}".format(precision.mean(), recall.mean()))
-
-        print()
+        precisionVals.append(precision.mean())
+        recallVals.append(recall.mean())
 
         # #############
         # Save progress
@@ -306,6 +308,13 @@ def run(epochs=10, seed=42, pretrained_weights=None):
     with open("validation_losses.txt", "w") as lossFile:
         for val in validationLosses:
             lossFile.write(str(val)+"\n")
+
+    with open("stats.txt", "w") as stats:
+        for i in range(epochs):
+            stats.write("{} {} {} {}\n".format(trainingLosses[i]
+                                               validationLosses[i]
+                                               precisionVals[i]
+                                               recallVals[i]))
 
 #if __name__ == "__main__":
 #    run()
