@@ -248,8 +248,8 @@ def run(epochs=10, seed=42, pretrained_weights=None):
             iou_thres=args.iou_thres,
             conf_thres=args.conf_thres,
             nms_thres=args.nms_thres,
-            verbose=args.verbose
-            
+            verbose=args.verbose)
+
         precision, recall, AP, f1, ap_class = metrics_output
         print("Precision: {}, Recall: {}".format(precison.mean(), recall.mean()))
 
