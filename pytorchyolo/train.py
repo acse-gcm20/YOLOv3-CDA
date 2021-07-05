@@ -161,7 +161,7 @@ def run(epochs=10, seed=42, pretrained_weights=None):
         
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader)): #enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
 
             batches_done = len(dataloader) * epoch + batch_i
 
