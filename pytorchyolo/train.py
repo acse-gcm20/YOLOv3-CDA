@@ -78,10 +78,9 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     return dataloader
 
 
-def run(epochs=10, seed=42, pretrained_weights=None):
+def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
     print("Training\n")
     args = Args(epochs, seed, pretrained_weights)
-    print("Epochs: {}, Seed: {}".format(args.epochs, args.seed))
 
     if args.seed != -1:
         provide_determinism(args.seed)
@@ -89,6 +88,8 @@ def run(epochs=10, seed=42, pretrained_weights=None):
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
     os.makedirs("checkpoints", exist_ok=True)
+
+    print("Epochs: {}, Seed: {}".format(args.epochs, args.seed))
 
     # Get data configuration
     data_config = parse_data_config(args.data)
@@ -102,7 +103,6 @@ def run(epochs=10, seed=42, pretrained_weights=None):
     # ############
 
     model = load_model(args.model, args.pretrained_weights)
-    print(model.hyperparams)
 
     # Print model
     if args.verbose:
@@ -300,20 +300,14 @@ def run(epochs=10, seed=42, pretrained_weights=None):
             print("Validation loss:", float(val_loss_components[3]))
             validationLosses.append(float(val_loss_components[3]))
 
-    with open("training_losses.txt", "w") as lossFile:
-        for val in trainingLosses:
-            lossFile.write(str(val)+"\n")
-
-    with open("validation_losses.txt", "w") as lossFile:
-        for val in validationLosses:
-            lossFile.write(str(val)+"\n")
-
-    with open("stats.txt", "w") as stats:
+    if append_file is not None:
+        stats_file = append_file
+    else:
+        stats_file = 'stats.txt'
+        
+    with open(stats_file, "a") as stats:
         for i in range(epochs):
             stats.write("{} {} {} {}\n".format(trainingLosses[i],
                                                validationLosses[i],
                                                precisionVals[i],
                                                recallVals[i]))
-
-#if __name__ == "__main__":
-#    run()
