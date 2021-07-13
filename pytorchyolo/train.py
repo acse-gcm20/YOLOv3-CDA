@@ -102,7 +102,7 @@ def run(epochs=10, seed=42, pretrained_weights=None):
     # ############
 
     model = load_model(args.model, args.pretrained_weights)
-    print(model.hperparams)
+    print(model.hyperparams)
 
     # Print model
     if args.verbose:
