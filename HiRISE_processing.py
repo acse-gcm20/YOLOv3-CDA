@@ -42,4 +42,4 @@ def tiling():
             img = Image.fromarray(tileArray, mode='L')
             img.save('data/HiRISE/tile_{}_{}.jpg'.format(i, j))
 
-tiling()
+#tiling()

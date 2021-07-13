@@ -102,6 +102,7 @@ def run(epochs=10, seed=42, pretrained_weights=None):
     # ############
 
     model = load_model(args.model, args.pretrained_weights)
+    print(model.hperparams)
 
     # Print model
     if args.verbose:
@@ -190,8 +191,6 @@ def run(epochs=10, seed=42, pretrained_weights=None):
                     for threshold, value in model.hyperparams['lr_steps']:
                         if batches_done > threshold:
                             lr *= value
-                # Log the learning rate
-                #logger.scalar_summary("train/learning_rate", lr, batches_done)
                 # Set learning rate
                 for g in optimizer.param_groups:
                     g['lr'] = lr
