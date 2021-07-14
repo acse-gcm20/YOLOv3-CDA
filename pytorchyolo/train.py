@@ -152,8 +152,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
 
     for epoch in range(args.epochs):
 
-        print("\nEpoch {} of {}".format(epoch, args.epochs))
-        print("---- Training ----")
+        print("\n## Epoch {} of {} ##\n".format(epoch+1, args.epochs))
         
         model.train()  # Set model to training mode
 
@@ -223,8 +222,6 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
         # Validation
         # #############
 
-        print("\n---- Validating ----")
-
         with torch.no_grad():
             for batch_i, (_, imgs, targets) in enumerate(validation_dataloader):
                 batches_done = len(validation_dataloader) * epoch + batch_i
@@ -259,7 +256,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
 
         # Save model to checkpoint file
         if epoch % args.checkpoint_interval == 0:
-            checkpoint_path = f"checkpoints/yolov3_ckpt_{epoch}.pth"
+            checkpoint_path = f"checkpoints/yolov3_ckpt_{epoch+1}.pth"
             print(f"\n---- Saving checkpoint to: '{checkpoint_path}' ----")
             torch.save(model.state_dict(), checkpoint_path)
 
