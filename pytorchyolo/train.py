@@ -77,6 +77,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
     print("Training\n")
     args = Args(epochs, seed, pretrained_weights)
+    print("Parameters: \nEpochs: {}, Seed: {}".format(args.epochs, args.seed))
 
     if args.seed != -1:
         provide_determinism(args.seed)
@@ -84,8 +85,6 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
     # Create output directories if missing
     os.makedirs("output", exist_ok=True)
     os.makedirs("checkpoints", exist_ok=True)
-
-    print("Epochs: {}, Seed: {}".format(args.epochs, args.seed))
 
     # Get data configuration
     data_config = parse_data_config(args.data)
