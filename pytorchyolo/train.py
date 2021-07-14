@@ -154,11 +154,11 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
     for epoch in range(args.epochs):
 
         print("\nEpoch: {}".format(epoch))
-        print("---- Training Model ----")
+        print("---- Training ----")
         
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training")):
 
             batches_done = len(dataloader) * epoch + batch_i
 
@@ -224,7 +224,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
         # Validation
         # #############
 
-        print("\n---- Validating Model ----")
+        print("---- Validating ----")
 
         with torch.no_grad():
             for batch_i, (_, imgs, targets) in enumerate(validation_dataloader):
@@ -248,53 +248,21 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
             verbose=args.verbose)
 
         precision, recall, AP, f1, ap_class = metrics_output
-        print("Precision: {}, Recall: {}".format(precision.mean(), recall.mean()))
+        #print("Precision: {}, Recall: {}".format(precision.mean(), recall.mean()))
         precisionVals.append(precision.mean())
         recallVals.append(recall.mean())
 
-        # #############
-        # Save progress
-        # #############
+        print("Training Loss", float(loss_components[3]))
+        trainingLosses.append(float(loss_components[3]))
+
+        print("Validation loss:", float(val_loss_components[3]))
+        validationLosses.append(float(val_loss_components[3]))
 
         # Save model to checkpoint file
         if epoch % args.checkpoint_interval == 0:
             checkpoint_path = f"checkpoints/yolov3_ckpt_{epoch}.pth"
-            print(f"---- Saving checkpoint to: '{checkpoint_path}' ----")
+            print(f"\n---- Saving checkpoint to: '{checkpoint_path}' ----")
             torch.save(model.state_dict(), checkpoint_path)
-
-        # ########
-        # Evaluate
-        # ########
-
-        # if epoch % args.evaluation_interval == 0:
-        #     print("\n---- Evaluating Model ----")
-        #     # Evaluate the model on the validation set
-        #     metrics_output = _evaluate(
-        #         model,
-        #         validation_dataloader,
-        #         class_names,
-        #         img_size=model.hyperparams['height'],
-        #         iou_thres=args.iou_thres,
-        #         conf_thres=args.conf_thres,
-        #         nms_thres=args.nms_thres,
-        #         verbose=args.verbose
-        #     )
-
-        #     if metrics_output is not None:
-        #         precision, recall, AP, f1, ap_class = metrics_output
-        #         evaluation_metrics = [
-        #             ("validation/precision", precision.mean()),
-        #             ("validation/recall", recall.mean()),
-        #             ("validation/mAP", AP.mean()),
-        #             ("validation/f1", f1.mean())]
-        #         logger.list_of_scalars_summary(evaluation_metrics, epoch)
-
-            print("\n---Evaluation---")
-            print("Training Loss", float(loss_components[3]))
-            trainingLosses.append(float(loss_components[3]))
-
-            print("Validation loss:", float(val_loss_components[3]))
-            validationLosses.append(float(val_loss_components[3]))
 
     if append_file is not None:
         stats_file = append_file
