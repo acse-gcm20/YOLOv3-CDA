@@ -271,3 +271,5 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
                                                validationLosses[i],
                                                precisionVals[i],
                                                recallVals[i]))
+
+    print("\nTraining finished. Statisics are saved in:", stats_file)
