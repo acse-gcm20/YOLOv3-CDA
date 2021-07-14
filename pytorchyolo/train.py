@@ -152,7 +152,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
 
     for epoch in range(args.epochs):
 
-        print("\nEpoch: {}".format(epoch))
+        print("\nEpoch {} of {}".format(epoch, args.epochs))
         print("---- Training ----")
         
         model.train()  # Set model to training mode
@@ -223,7 +223,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
         # Validation
         # #############
 
-        print("---- Validating ----")
+        print("\n---- Validating ----")
 
         with torch.no_grad():
             for batch_i, (_, imgs, targets) in enumerate(validation_dataloader):
@@ -251,7 +251,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
         precisionVals.append(precision.mean())
         recallVals.append(recall.mean())
 
-        print("Training Loss", float(loss_components[3]))
+        print("\nTraining Loss", float(loss_components[3]))
         trainingLosses.append(float(loss_components[3]))
 
         print("Validation loss:", float(val_loss_components[3]))
