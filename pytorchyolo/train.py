@@ -41,10 +41,6 @@ class Args:
         self.logdir = 'logs'
         self.seed = seed
 
-    # def display(self):
-    #     for attr, value in self.__dict__items():
-    #         print(attr, value)
-
 def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_training=False):
     """Creates a DataLoader for training.
 
@@ -189,7 +185,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
                 else:
                     # Set and parse the learning rate to the steps defined in the cfg
                     for threshold, value in model.hyperparams['lr_steps']:
-                        if batches_done > threshold:
+                        if epoch > threshold:
                             lr *= value
                 # Set learning rate
                 for g in optimizer.param_groups:
