@@ -101,7 +101,7 @@ class ListDataset(Dataset):
                 warnings.simplefilter("ignore")
                 #boxes = np.loadtxt(label_path).reshape(-1, 5)
                 f = open(label_path, 'r')
-                labels = [[float(x) for x in line.split()[:5]] for line in f.read().splitlines()]
+                labels = [[float(x) for x in line.split()[:5]] for line in f.readlines()]
                 boxes = np.array(labels)
                 f.close()
         except Exception:
