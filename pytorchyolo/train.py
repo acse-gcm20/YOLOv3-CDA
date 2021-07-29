@@ -184,9 +184,9 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
                 else:
                     # Set and parse the learning rate to the steps defined in the cfg
                     for threshold, value in model.hyperparams['lr_steps']:
-                        if epoch > threshold:
+                        if epoch >= threshold:
                             lr *= value
-                            if epoch == threshold+1:
+                            if epoch == threshold:
                                 print(f'\nNew learning rate: {lr}')
                 # Set learning rate
                 for g in optimizer.param_groups:
