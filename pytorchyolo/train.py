@@ -149,6 +149,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
     validationLosses = []
     precisionVals = []
     recallVals = []
+    mAPs = []
 
     for epoch in range(args.epochs):
 
@@ -247,6 +248,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
         #print("Precision: {}, Recall: {}".format(precision.mean(), recall.mean()))
         precisionVals.append(precision.mean())
         recallVals.append(recall.mean())
+        mAPs.append(AP.mean())
 
         print("\nTraining Loss", float(loss_components[3]))
         trainingLosses.append(float(loss_components[3]))
@@ -267,9 +269,10 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
         
     with open(stats_file, "a") as stats:
         for i in range(epochs):
-            stats.write("{} {} {} {}\n".format(trainingLosses[i],
+            stats.write("{} {} {} {} {}\n".format(trainingLosses[i],
                                                validationLosses[i],
                                                precisionVals[i],
-                                               recallVals[i]))
+                                               recallVals[i],
+                                               mAPs[i]))
 
     print("\nTraining finished. Statisics are saved in:", stats_file)
