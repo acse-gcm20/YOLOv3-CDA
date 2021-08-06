@@ -154,6 +154,10 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
     for epoch in range(args.epochs):
 
         print("\n## Epoch {} of {} ##\n".format(epoch+1, args.epochs))
+
+        for threshold, value in model.hyperparams['lr_steps']:
+            if epoch == threshold:
+                print(f'New learning rate: {model.hyperparams['learning_rate'] * value}\n')
         
         model.train()  # Set model to training mode
 
@@ -186,8 +190,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
                     for threshold, value in model.hyperparams['lr_steps']:
                         if epoch >= threshold:
                             lr *= value
-                            if epoch == threshold:
-                                print(f'\nNew learning rate: {lr}')
+
                 # Set learning rate
                 for g in optimizer.param_groups:
                     g['lr'] = lr
