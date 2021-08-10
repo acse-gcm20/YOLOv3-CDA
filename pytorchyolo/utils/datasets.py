@@ -99,11 +99,10 @@ class ListDataset(Dataset):
             # Ignore warning if file is empty
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                boxes = np.loadtxt(label_path).reshape(-1, 5)
-                # f = open(label_path, 'r')
-                # labels = [[float(x) for x in line.split()[:5]] for line in f.readlines()]
-                # boxes = np.array(labels)
-                # f.close()
+                # boxes = np.loadtxt(label_path).reshape(-1, 5)
+                with open(label_path, 'r') as f:
+                    labels = [[float(x) for x in line.split()[:5]] for line in f.readlines()]
+                    boxes = np.array(labels)
         except Exception:
             print(Exception)
             print(f"Could not read label '{label_path}'.")

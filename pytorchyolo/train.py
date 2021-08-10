@@ -157,7 +157,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None):
 
         for threshold, value in model.hyperparams['lr_steps']:
             if epoch == threshold:
-                print(f'New learning rate: {model.hyperparams['learning_rate'] * value}\n')
+                print(f'New learning rate: {model.hyperparams["learning_rate"] * value}\n')
         
         model.train()  # Set model to training mode
 
