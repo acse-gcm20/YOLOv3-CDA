@@ -4,14 +4,20 @@ import random
 import cv2
 from PIL import Image, ImageTk
 
-image_path = 'images'
-label_path = 'labels'
-color = (0, 255, 0)
-line_width = 1
-shuffle = True
+image_path = 'data\\Robbins\\images'
+label_path_class = 'data\\Robbins\\classifier\\labels'
+label_path = 'data\\Robbins\\labels'
+red = (0, 0, 255)
+green = (0, 255, 0)
+blue = (255, 0, 0)
+line_width = 2
+shuffle = False
+
+with open('data\Robbins\classifier\image_list') as f:
+    lines = f.readlines()
+    img_list = [line.rstrip('\n') for line in lines]
 
 slash = os.sep
-img_list = [img for img in os.listdir(image_path) if img.endswith(('png', 'jpg', 'jpeg'))]
 img_format = img_list[0].split('.')[-1]
 if shuffle:
     random.shuffle(img_list)
@@ -25,6 +31,26 @@ tk_label.pack(padx=10, pady=10)
 def xywh2xyxy(x, y, w, h, dtype=float, scale=(1, 1)):
     x, y, w, h = float(x) * scale[0], float(y) * scale[1], float(w) * scale[0], float(h) * scale[1]
     return dtype(x - w / 2), dtype(y - h / 2), dtype(x + w / 2), dtype(y + h / 2)
+
+def get_label_list(label_file):
+    # Classified
+    try:
+        f = open(label_path_class + slash + label_file, 'r')
+        label_list = [line.split(' ') for line in f.readlines()]
+        ids = [label[-1].rstrip('\n') for label in label_list]
+        f.close()
+    except:
+        label_list = []
+
+    # Normal
+    f = open(label_path + slash + label_file, 'r')
+    for line in f.read().splitlines():
+        line = line.split(' ')
+        if line[-1].rstrip('\n') not in ids:
+            label_list.append(line)
+    f.close()
+
+    return label_list
 
 def show_next():
     global img_idx
@@ -48,16 +74,17 @@ def show_next():
 
     img_shape = img.shape
 
-    try:
-        f = open(label_path + slash + lbl_name, 'r')
-        label_list = [line.split(' ') for line in f.read().splitlines()]
-        f.close()
-    except:
-        label_list = []
+    label_list = get_label_list(lbl_name)
     
     for label in label_list:
         x1, y1, x2, y2 = xywh2xyxy(*label[1:5], dtype=round, scale=img_shape[:2])
-        cv2.rectangle(img, (x1, y1), (x2, y2), color, line_width)
+
+        if label[0] == '0':
+            cv2.rectangle(img, (x1, y1), (x2, y2), red, line_width)
+        else:
+            cv2.rectangle(img, (x1, y1), (x2, y2), green, line_width)
+            cv2.putText(img, label[0], (x1, y1-12),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, green, 1, cv2.LINE_AA)
     
     pillow_img = Image.fromarray(img[:,:,::-1])
     tk_img = ImageTk.PhotoImage(image=pillow_img)

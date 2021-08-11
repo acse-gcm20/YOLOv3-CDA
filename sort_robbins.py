@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+import shutil
 
 def get_filename(latitude, longitude):
 
@@ -37,23 +38,17 @@ def generate_df(pth):
 
     return craters, filenames
 
-def write_image_list(img_losses, threshold=0.5):
+def write_image_list(imgs):
     # Create a list of images containing classified craters
     # This list can be used in Colab to transfer the correct files
     pth = 'data\Robbins\classifier\image_list'
-
-    if threshold == 1:
-        good_imgs = img_losses
-    else:
-        threshold_loss = img_losses.iloc[int(len(img_losses) * threshold)]['obj_loss']
-        good_imgs = img_losses[img_losses['obj_loss'] < threshold_loss]
     
     with open(pth, 'w') as f:
-        for _, row in good_imgs.iterrows():
+        for _, row in imgs.iterrows():
             filename = row['filename']
             f.write(filename+'.png\n')
 
-def get_obj_loss(filenames):
+def sort_obj_loss(filenames, threshold):
     # Rank objectness loss of images with classified craters
     pth = 'data\\Robbins\\loss_rank.csv'
 
@@ -67,14 +62,21 @@ def get_obj_loss(filenames):
 
     class_data.sort_values('obj_loss', ascending=True, inplace=True)
     class_data.reset_index(drop=True, inplace=True)
-    return class_data
+
+    if threshold == 1:
+        good_imgs = class_data
+    else:
+        threshold_loss = class_data.iloc[int(len(class_data) * threshold)]['obj_loss']
+        good_imgs = class_data[class_data['obj_loss'] < threshold_loss]
+
+    return good_imgs
 
 def sort_files(files, craters):
     # Copy the relevant labels from processed Robbins data
     # Remove unclassified craters and correct class labels 
     for filename in files:
         pth = f'data\\Robbins\\labels\\{filename}.txt'
-        new_label = open(f'data\\Robbins\\classifier\\labels\\{filename}.txt', 'a')
+        new_label = open(f'data\\Robbins\\classifier\\labels\\{filename}.txt', 'w')
         ids = craters[craters['filename']==filename]['v1']
 
         with open(pth) as f:
@@ -94,10 +96,19 @@ def sort_files(files, craters):
         
         new_label.close()
 
+def analyze(craters, imgs, threshold):
+    print(f'Crater Distribution (threshold = {threshold})')
+    df = craters[craters['filename'].isin(imgs['filename'])]
+    print(df['degradation_state'].value_counts().sort_index().astype(int))
+    print(f'Total craters: {len(df)}')
+
 def main(deg_state_csv, threshold):
 
     craters, files = generate_df(deg_state_csv)
-    img_losses = get_obj_loss(files)
-    write_image_list(img_losses, threshold=threshold)
+    good_imgs = sort_obj_loss(files, threshold)
+    write_image_list(good_imgs)
+    analyze(craters, good_imgs, threshold)
 
-#sort_files(list(set(files)), craters)
+#main('data\Robbins\degradation_states.csv', 0.5)
+craters, files = generate_df('data\Robbins\degradation_states.csv')
+sort_files(list(set(files)), craters)
