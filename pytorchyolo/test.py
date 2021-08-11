@@ -135,9 +135,6 @@ def _evaluate(model, dataloader, class_names, img_size, iou_thres, conf_thres, n
         print("---- No detections over whole validation set ----")
         return None
 
-    #validationLoss, valLossComponents = compute_loss(outputs, targets, model)
-    #print("Validation Loss:", float(valLossComponents[3]))
-
     # Concatenate sample statistics
     true_positives, pred_scores, pred_labels = [
         np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
@@ -198,6 +195,9 @@ def test(weights, img_size, batch_size=8):
     # Path to file containing all images for validation
     valid_path = data_config["test"]
     class_names = load_classes(data_config["names"])  # List of class names
+
+    #validationLoss, valLossComponents = compute_loss(outputs, targets, model)
+    #print("Validation Loss:", float(valLossComponents[3]))
 
     precision, recall, AP, f1, ap_class = evaluate_model_file(
         args.model,
