@@ -19,6 +19,19 @@ from pytorchyolo.utils.transforms import DEFAULT_TRANSFORMS
 from pytorchyolo.utils.parse_config import parse_data_config
 from pytorchyolo.utils.loss import compute_loss
 
+class Args:
+    def __init__(self, weights, img_size, batch_size):
+        self.model = 'yolov3.cfg'
+        self.weights = weights
+        self.data = 'config/custom.data'
+        self.batch_size = batch_size
+        self.verbose = False
+        self.img_size = img_size
+        self.n_cpu = 2
+        self.iou_thres = 0.5
+        self.conf_thres = 0.1
+        self.nms_thres = 0.5
+
 def evaluate_model_file(model_path, weights_path, img_path, class_names, batch_size=8, img_size=416,
                         n_cpu=8, iou_thres=0.5, conf_thres=0.5, nms_thres=0.5, verbose=True):
     """Evaluate model on validation dataset.
@@ -162,26 +175,28 @@ def _create_validation_data_loader(img_path, batch_size, img_size, n_cpu):
     return dataloader
 
 
-def run():
-    print_environment_info()
-    parser = argparse.ArgumentParser(description="Evaluate validation data.")
-    parser.add_argument("-m", "--model", type=str, default="config/yolov3.cfg", help="Path to model definition file (.cfg)")
-    parser.add_argument("-w", "--weights", type=str, default="weights/yolov3.weights", help="Path to weights or checkpoint file (.weights or .pth)")
-    parser.add_argument("-d", "--data", type=str, default="config/coco.data", help="Path to data config file (.data)")
-    parser.add_argument("-b", "--batch_size", type=int, default=8, help="Size of each image batch")
-    parser.add_argument("-v", "--verbose", action='store_true', help="Makes the validation more verbose")
-    parser.add_argument("--img_size", type=int, default=416, help="Size of each image dimension for yolo")
-    parser.add_argument("--n_cpu", type=int, default=8, help="Number of cpu threads to use during batch generation")
-    parser.add_argument("--iou_thres", type=float, default=0.5, help="IOU threshold required to qualify as detected")
-    parser.add_argument("--conf_thres", type=float, default=0.01, help="Object confidence threshold")
-    parser.add_argument("--nms_thres", type=float, default=0.4, help="IOU threshold for non-maximum suppression")
-    args = parser.parse_args()
-    print(f"Command line arguments: {args}")
+def test(weights, img_size, batch_size=8):
+    # print_environment_info()
+    # parser = argparse.ArgumentParser(description="Evaluate validation data.")
+    # parser.add_argument("-m", "--model", type=str, default="config/yolov3.cfg", help="Path to model definition file (.cfg)")
+    # parser.add_argument("-w", "--weights", type=str, default="weights/yolov3.weights", help="Path to weights or checkpoint file (.weights or .pth)")
+    # parser.add_argument("-d", "--data", type=str, default="config/coco.data", help="Path to data config file (.data)")
+    # parser.add_argument("-b", "--batch_size", type=int, default=8, help="Size of each image batch")
+    # parser.add_argument("-v", "--verbose", action='store_true', help="Makes the validation more verbose")
+    # parser.add_argument("--img_size", type=int, default=416, help="Size of each image dimension for yolo")
+    # parser.add_argument("--n_cpu", type=int, default=8, help="Number of cpu threads to use during batch generation")
+    # parser.add_argument("--iou_thres", type=float, default=0.5, help="IOU threshold required to qualify as detected")
+    # parser.add_argument("--conf_thres", type=float, default=0.01, help="Object confidence threshold")
+    # parser.add_argument("--nms_thres", type=float, default=0.4, help="IOU threshold for non-maximum suppression")
+    # args = parser.parse_args()
+    # print(f"Command line arguments: {args}")
+
+    args = Args(weights, data, img_size, batch_size)
 
     # Load configuration from data file
     data_config = parse_data_config(args.data)
     # Path to file containing all images for validation
-    valid_path = data_config["valid"]
+    valid_path = data_config["test"]
     class_names = load_classes(data_config["names"])  # List of class names
 
     precision, recall, AP, f1, ap_class = evaluate_model_file(
@@ -196,7 +211,3 @@ def run():
         conf_thres=args.conf_thres,
         nms_thres=args.nms_thres,
         verbose=True)
-
-
-if __name__ == "__main__":
-    run()
