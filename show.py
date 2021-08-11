@@ -12,10 +12,14 @@ green = (0, 255, 0)
 blue = (255, 0, 0)
 line_width = 2
 shuffle = False
+descending = False
 
 with open('data\Robbins\classifier\image_list') as f:
     lines = f.readlines()
     img_list = [line.rstrip('\n') for line in lines]
+
+if not descending:
+    img_list.reverse()
 
 slash = os.sep
 img_format = img_list[0].split('.')[-1]

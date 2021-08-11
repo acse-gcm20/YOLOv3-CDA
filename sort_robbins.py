@@ -109,6 +109,6 @@ def main(deg_state_csv, threshold):
     write_image_list(good_imgs)
     analyze(craters, good_imgs, threshold)
 
-#main('data\Robbins\degradation_states.csv', 0.5)
-craters, files = generate_df('data\Robbins\degradation_states.csv')
-sort_files(list(set(files)), craters)
+main('data\Robbins\degradation_states.csv', 0.10)
+#craters, files = generate_df('data\Robbins\degradation_states.csv')
+#sort_files(list(set(files)), craters)
