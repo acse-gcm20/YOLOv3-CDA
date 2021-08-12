@@ -9,18 +9,6 @@ class ID_dict:
         self.v2df = pd.read_csv(v2, low_memory=False)[['CRATER_ID', 'LATITUDE_CIRCLE_IMAGE', 'LONGITUDE_CIRCLE_IMAGE', 'DEGRADATION_STATE']]
         self.id_df = pd.DataFrame({'v1':crater_ids, 'v2':'', 'latitude':'', 'longitude':'', 'degradation_state':''})
 
-
-    def ids_from_file(self, filename):
-        ids = []
-
-        with open(filename) as f:
-            for line in f.readlines():
-                line = line.rstrip('\n').split(' ')
-                if line[5] != '':
-                    ids.append(line[5])
-
-        return ids
-
     def get_lat_long(self, idx):
 
         self.v1_id = self.id_df.iloc[idx]['v1']
@@ -46,7 +34,7 @@ class ID_dict:
         except IndexError:
             return 1
 
-    def get_deg_state(idx):
+    def get_deg_state(self, idx):
 
         v2_id = self.id_df.iloc[idx]['v2']
 
@@ -55,6 +43,17 @@ class ID_dict:
 
         if ds is not '':
             self.id_df.iloc[idx]['degradation_state'] = ds
+
+def ids_from_file(filename):
+    ids = []
+
+    with open(filename) as f:
+        for line in f.readlines():
+            line = line.rstrip('\n').split(' ')
+            if line[5] != '':
+                ids.append(line[5])
+
+    return ids
 
 def run():
     v1 = 'data/Robbins/Robbins_v1.csv'
