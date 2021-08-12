@@ -35,14 +35,14 @@ def generate_df(pth, save_csv=True):
     craters['filename'] = np.array(filenames)
 
     if save_csv:
-        craters.to_csv('data\\Robbins\\classified_craters.csv')
+        craters.to_csv('.\data\\Robbins\\classified_craters.csv')
 
     return craters, filenames
 
 def write_image_list(imgs):
     # Create a list of images containing classified craters
     # This list can be used in Colab to transfer the correct files
-    pth = 'data\Robbins\classifier\image_list'
+    pth = '.\data\Robbins\classifier\image_list'
     
     with open(pth, 'w') as f:
         for _, row in imgs.iterrows():
@@ -51,7 +51,7 @@ def write_image_list(imgs):
 
 def sort_obj_loss(filenames, threshold):
     # Rank objectness loss of images with classified craters
-    pth = 'data\\Robbins\\loss_rank.csv'
+    pth = '.\data\\Robbins\\loss_rank.csv'
 
     data = pd.read_csv(pth)
     class_data = pd.DataFrame({'filename':filenames, 'obj_loss':np.zeros(len(filenames))})
@@ -76,8 +76,8 @@ def sort_files(files, craters):
     # Copy the relevant labels from processed Robbins data
     # Remove unclassified craters and correct class labels 
     for filename in files:
-        pth = f'data\\Robbins\\labels\\{filename}.txt'
-        new_label = open(f'data\\Robbins\\classifier\\labels\\{filename}.txt', 'w')
+        pth = f'.\data\\Robbins\\labels\\{filename}.txt'
+        new_label = open(f'.\data\\Robbins\\classifier\\labels\\{filename}.txt', 'w')
         ids = craters[craters['filename']==filename]['v1']
 
         with open(pth) as f:
@@ -110,6 +110,6 @@ def main(deg_state_csv, threshold):
     write_image_list(good_imgs)
     analyze(craters, good_imgs, threshold)
 
-main('data\Robbins\degradation_states.csv', 0.10)
+main('.\data\Robbins\degradation_states.csv', 0.10)
 #craters, files = generate_df('data\Robbins\degradation_states.csv')
 #sort_files(list(set(files)), craters)
