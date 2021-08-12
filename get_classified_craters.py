@@ -2,77 +2,83 @@ import pandas as pd
 import os
 from tqdm import tqdm
 
-def ids_from_file(filename):
-    ids = []
+class ID_dict:
 
-    with open(filename) as f:
-        for line in f.readlines():
-            line = line.rstrip('\n').split(' ')
-            if line[5] != '':
-                ids.append(line[5])
+    def __init__(self, v1, v2, crater_ids):
+        self.v1df = pd.read_csv(v1)[['CRATER_ID', 'LATITUDE_CIRCLE_IMAGE', 'LONGITUDE_CIRCLE_IMAGE']]
+        self.v2df = pd.read_csv(v2, low_memory=False)[['CRATER_ID', 'LATITUDE_CIRCLE_IMAGE', 'LONGITUDE_CIRCLE_IMAGE', 'DEGRADATION_STATE']]
+        self.id_df = pd.DataFrame({'v1':crater_ids, 'v2':'', 'latitude':'', 'longitude':'', 'degradation_state':''})
 
-    return ids
 
-def get_lat_long(idx):
+    def ids_from_file(self, filename):
+        ids = []
 
-    v1_id = id_df.iloc[idx]['v1']
+        with open(filename) as f:
+            for line in f.readlines():
+                line = line.rstrip('\n').split(' ')
+                if line[5] != '':
+                    ids.append(line[5])
 
-    row = v1df[v1df['CRATER_ID']==v1_id].iloc[0]
+        return ids
 
-    lat = row['LATITUDE_CIRCLE_IMAGE']
-    lon = row['LONGITUDE_CIRCLE_IMAGE']
+    def get_lat_long(self, idx):
 
-    id_df.iloc[idx]['latitude'] = lat
-    id_df.iloc[idx]['longitude'] = lon
+        self.v1_id = self.id_df.iloc[idx]['v1']
 
-def get_v2(idx):
+        row = self.v1df[self.v1df['CRATER_ID']==v1_id].iloc[0]
 
-    lat = id_df.iloc[idx]['latitude']
-    lon = id_df.iloc[idx]['longitude']
+        lat = row['LATITUDE_CIRCLE_IMAGE']
+        lon = row['LONGITUDE_CIRCLE_IMAGE']
 
-    try:
-        row = v2df[(v2df['LATITUDE_CIRCLE_IMAGE']==lat) & (v2df['LONGITUDE_CIRCLE_IMAGE']==lon)].iloc[0]
-        v2_id = row['CRATER_ID']
-        id_df.iloc[idx]['v2'] = v2_id
-        return 0
-    except IndexError:
-        return 1
+        self.id_df.iloc[idx]['latitude'] = lat
+        self.id_df.iloc[idx]['longitude'] = lon
 
-def get_deg_state(idx):
+    def get_v2(self, idx):
 
-    v2_id = id_df.iloc[idx]['v2']
+        lat = self.id_df.iloc[idx]['latitude']
+        lon = self.id_df.iloc[idx]['longitude']
 
-    row = v2df[v2df['CRATER_ID']==v2_id].iloc[0]
-    ds = row['DEGRADATION_STATE']
+        try:
+            row = self.v2df[(self.v2df['LATITUDE_CIRCLE_IMAGE']==lat) & (self.v2df['LONGITUDE_CIRCLE_IMAGE']==lon)].iloc[0]
+            v2_id = row['CRATER_ID']
+            self.id_df.iloc[idx]['v2'] = v2_id
+            return 0
+        except IndexError:
+            return 1
 
-    if ds is not '':
-        id_df.iloc[idx]['degradation_state'] = ds
+    def get_deg_state(idx):
 
-v1 = 'data/Robbins/Robbins_v1.csv'
-v2 = 'data/Robbins/Robbins_v2.csv'
+        v2_id = self.id_df.iloc[idx]['v2']
 
-v1df = pd.read_csv(v1)[['CRATER_ID', 'LATITUDE_CIRCLE_IMAGE', 'LONGITUDE_CIRCLE_IMAGE']]
-v2df = pd.read_csv(v2, low_memory=False)[['CRATER_ID', 'LATITUDE_CIRCLE_IMAGE', 'LONGITUDE_CIRCLE_IMAGE', 'DEGRADATION_STATE']]
+        row = self.v2df[self.v2df['CRATER_ID']==v2_id].iloc[0]
+        ds = row['DEGRADATION_STATE']
 
-labels = 'data/Robbins/labels/'
+        if ds is not '':
+            self.id_df.iloc[idx]['degradation_state'] = ds
 
-crater_ids = []
-missed_craters = []
+def run()
+    v1 = 'data/Robbins/Robbins_v1.csv'
+    v2 = 'data/Robbins/Robbins_v2.csv'
 
-for label_file in os.listdir(labels):
-    crater_ids += ids_from_file(labels+label_file)
+    labels = 'data/Robbins/labels/'
 
-id_df = pd.DataFrame({'v1':crater_ids, 'v2':'', 'latitude':'', 'longitude':'', 'degradation_state':''})
+    crater_ids = []
+    missed_craters = []
 
-for i in tqdm(range(len(id_df))):
-    get_lat_long(i)
-    if get_v2(i) == 1:
-        missed_craters.append(i)
-    else:
-        get_deg_state(i):
+    for label_file in os.listdir(labels):
+        crater_ids += ids_from_file(labels+label_file)
 
-print(f'missed {len(missed_craters)} craters')
-print(missed_craters)
-print(id_df.head(), '\n')
+    id_dict = ID_dict(v1, v2, crater_ids)
 
-id_df.to_csv('id_dictionary.csv')
+    for i in tqdm(range(len(id_df))):
+        id_dict.get_lat_long(i)
+        if id_dict.get_v2(i) == 1:
+            missed_craters.append(i)
+        else:
+            id_dict.get_deg_state(i)
+
+    print(f'missed {len(missed_craters)} craters')
+    print(missed_craters)
+    print(id_dict.id_df.head(), '\n')
+
+    id_dict.id_df.to_csv('id_dictionary.csv')
