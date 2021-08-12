@@ -56,11 +56,11 @@ class ID_dict:
         if ds is not '':
             self.id_df.iloc[idx]['degradation_state'] = ds
 
-def run()
+def run():
     v1 = 'data/Robbins/Robbins_v1.csv'
     v2 = 'data/Robbins/Robbins_v2.csv'
 
-    labels = 'data/Robbins/labels/'
+    labels = 'data/Robbins/combined_dataset/labels/'
 
     crater_ids = []
     missed_craters = []
