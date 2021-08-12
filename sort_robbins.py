@@ -103,12 +103,14 @@ def analyze(craters, imgs, threshold):
     print(df['degradation_state'].value_counts().sort_index().astype(int))
     print(f'Total craters: {len(df)}')
 
-def main(deg_state_csv, threshold):
+def main(deg_state_csv, threshold, stats=True):
 
     craters, files = generate_df(deg_state_csv)
     good_imgs = sort_obj_loss(files, threshold)
     write_image_list(good_imgs)
-    analyze(craters, good_imgs, threshold)
+
+    if stats:
+        analyze(craters, good_imgs, threshold)
 
 
 #main('./data/Robbins/degradation_states.csv', 0.10)
