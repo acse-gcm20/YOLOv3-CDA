@@ -69,7 +69,7 @@ def run():
 
     id_dict = ID_dict(v1, v2, crater_ids)
 
-    for i in tqdm(range(len(id_df))):
+    for i in tqdm(range(len(id_dict.id_df))):
         id_dict.get_lat_long(i)
         if id_dict.get_v2(i) == 1:
             missed_craters.append(i)
