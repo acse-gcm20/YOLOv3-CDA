@@ -92,7 +92,6 @@ def sort_files(files, craters):
                     state = int(row['degradation_state'])
                     new_line = ' '.join([str(state)] + line[1:]) + '/n'
 
-                    
                     new_label.write(new_line)
         
         new_label.close()
