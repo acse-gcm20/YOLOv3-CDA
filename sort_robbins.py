@@ -18,7 +18,7 @@ def get_filename(latitude, longitude):
 
     return name
 
-def generate_df(pth):
+def generate_df(pth, save_csv=True):
 
     data = pd.read_csv(pth)
 
@@ -34,7 +34,8 @@ def generate_df(pth):
     # add filenames column to dataframe
     craters['filename'] = np.array(filenames)
 
-    craters.to_csv('data\\Robbins\\classified_craters.csv')
+    if save_csv:
+        craters.to_csv('data\\Robbins\\classified_craters.csv')
 
     return craters, filenames
 
