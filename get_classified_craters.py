@@ -11,7 +11,7 @@ class ID_dict:
 
     def get_lat_long(self, idx):
 
-        self.v1_id = self.id_df.iloc[idx]['v1']
+        v1_id = self.id_df.iloc[idx]['v1']
 
         row = self.v1df[self.v1df['CRATER_ID']==v1_id].iloc[0]
 
