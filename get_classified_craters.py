@@ -41,7 +41,7 @@ class ID_dict:
         row = self.v2df[self.v2df['CRATER_ID']==v2_id].iloc[0]
         ds = row['DEGRADATION_STATE']
 
-        if ds is not '':
+        if ds != '':
             self.id_df.iloc[idx]['degradation_state'] = ds
 
 def ids_from_file(filename):
