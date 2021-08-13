@@ -82,8 +82,15 @@ def sort_obj_loss(filenames, threshold):
 def sort_files(craters):
     # Copy the relevant images and labels from processed Robbins data
     # Remove unclassified craters and correct class labels
-    os.mkdir('data/Robbins/classifier/images')
-    os.mkdir('data/Robbins/classifier/labels')
+    if not os.path.exists('data/Robbins/classifier/images/'):
+        os.mkdir('data/Robbins/classifier/images/')
+    else:
+        os.remove('data/Robbins/classifier/images/*')
+
+    if not os.path.exists('data/Robbins/classifier/labels/'):
+        os.mkdir('data/Robbins/classifier/labels/')
+    else:
+        os.remove('data/Robbins/classifier/labels/*')
 
     with open('./data/Robbins/classifier/image_list', 'r') as img_list:
         files = [img.rstrip('.png\n') for img in img_list.readlines()]
