@@ -122,6 +122,7 @@ def analyze(craters, imgs, threshold):
     print(f'Crater Distribution (threshold = {threshold})')
     print(df['degradation_state'].value_counts().sort_index().astype(int))
     print(f'Total craters: {len(df)}')
+    print(f'Total images: {len(imgs)}')
 
 def main(deg_state_csv, threshold, stats=True):
 
