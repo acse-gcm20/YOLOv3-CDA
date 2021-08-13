@@ -59,7 +59,7 @@ def run():
     v1 = 'data/Robbins/Robbins_v1.csv'
     v2 = 'data/Robbins/Robbins_v2.csv'
 
-    labels = 'data/Robbins/combined_dataset/labels/'
+    labels = 'data/Robbins/crater_group_dataset/labels/'
 
     crater_ids = []
     missed_craters = []
@@ -67,7 +67,7 @@ def run():
     for label_file in os.listdir(labels):
         crater_ids += ids_from_file(labels+label_file)
     
-    print(f'{len(os.listdir(labels))} labels')
+    print(f'{len(os.listdir(labels))} files')
     print(f'{len(crater_ids)} craters')
 
     id_dict = ID_dict(v1, v2, crater_ids)
@@ -79,8 +79,8 @@ def run():
         else:
             id_dict.get_deg_state(i)
 
-    print(f'missed {len(missed_craters)} craters')
     print(f'{len(id_dict.id_df)} craters saved')
+    print(f'{len(missed_craters)} craters missed')
     print(id_dict.id_df.head(), '\n')
 
     id_dict.id_df.to_csv('crater_dictionary.csv')

@@ -11,8 +11,8 @@ red = (0, 0, 255)
 green = (0, 255, 0)
 blue = (255, 0, 0)
 line_width = 2
-shuffle = False
-descending = False
+shuffle = True
+descending = True
 
 with open('data\Robbins\classifier\image_list') as f:
     lines = f.readlines()
