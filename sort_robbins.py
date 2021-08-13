@@ -108,7 +108,7 @@ def sort_files(craters):
                         new_line = line
                         row = craters[craters['v1'] == line[-1]].iloc[0]
                         state = (int(row['degradation_state']) - 1) # Subtract one to zero index labels
-                        new_line = ' '.join([str(state)] + line[1:]) + '/n'
+                        new_line = ' '.join([str(state)] + line[1:]) + '\n'
 
                         new_label.write(new_line)
             
