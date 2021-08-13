@@ -79,30 +79,40 @@ def sort_obj_loss(filenames, threshold):
 
     return good_imgs
 
-def sort_files(files, craters):
-    # Copy the relevant labels from processed Robbins data
-    # Remove unclassified craters and correct class labels 
-    for filename in files:
-        pth = f'./data/Robbins/labels/{filename}.txt'
-        new_label = open(f'./data/Robbins/classifier/labels/{filename}.txt', 'w')
-        ids = craters[craters['filename']==filename]['v1']
+def sort_files(craters):
+    # Copy the relevant images and labels from processed Robbins data
+    # Remove unclassified craters and correct class labels
+    with open('./data/Robbins/classifier/image_list', 'r') as img_list:
+        files = [img.rstrip('.png\n') for img in img_list.readlines()]
 
-        with open(pth) as f:
-            lines = f.readlines()
-            for line in lines:
-                line = line.rstrip('/n').split(' ')
+        for filename in files:
+            # Copy image to classifier directory
+            os.system(f'cp data/Robbins/crater_group_dataset/images/{filename} data/Robbins/classifier/images/')
 
-                # if original crater and in deg_state df
-                # replace label with classification and write to new label file
-                if len(line) == 6 and line[-1] in ids.values:
-                    new_line = line
-                    row = craters[craters['v1'] == line[-1]].iloc[0]
-                    state = (int(row['degradation_state']) - 1) # Subtract one to zero index labels
-                    new_line = ' '.join([str(state)] + line[1:]) + '/n'
+            # Create new label in classifier directory
+            new_label = open(f'./data/Robbins/classifier/labels/{filename}.txt', 'w')
+            # Collect IDs of craters in file
+            ids = craters[craters['filename']==filename]['v1']
 
-                    new_label.write(new_line)
-        
-        new_label.close()
+            # Loop through craters in image and write new label for classified craters
+            # Remove unclassified labels
+            label_pth = f'./data/Robbins/crater_group_dataset/labels/{filename}.txt'
+            with open(label_pth) as f:
+                lines = f.readlines()
+                for line in lines:
+                    line = line.rstrip('\n').split(' ')
+
+                    # if original crater and has degradation state
+                    # replace label with classification and write to new label file
+                    if len(line) == 6 and line[-1] in ids.values:
+                        new_line = line
+                        row = craters[craters['v1'] == line[-1]].iloc[0]
+                        state = (int(row['degradation_state']) - 1) # Subtract one to zero index labels
+                        new_line = ' '.join([str(state)] + line[1:]) + '/n'
+
+                        new_label.write(new_line)
+            
+            new_label.close()
 
 def analyze(craters, imgs, threshold):
     # Get dataframe of all classified craters in the desired images
@@ -124,6 +134,9 @@ def main(deg_state_csv, threshold, stats=True):
     # Write the list of desired images to a file
     # This file is used in Colab to transfer the dataset
     write_image_list(good_imgs)
+
+    # Transfer desired label files to separate directory
+    sort_files(craters)
 
     # Print stats
     if stats:
