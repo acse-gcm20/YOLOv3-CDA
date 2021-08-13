@@ -55,25 +55,25 @@ def write_image_list(imgs):
 
 def sort_obj_loss(filenames, threshold):
     # Ranking of images by objectness loss
-    pth = './data/Robbins/loss_rank.csv'
-
-    data = pd.read_csv(pth)
-
-    # Generate dataframe of the images we want to use and store their objectness
-    class_data = pd.DataFrame({'filename':filenames, 'obj_loss':np.zeros(len(filenames))})
-    class_data.drop_duplicates(subset='filename', inplace=True)
-
-    for i, row in class_data.iterrows():
-        loss = data[data['img']==row['filename']]['obj'].iloc[0]
-        class_data.loc[i, 'obj_loss'] = loss
-
-    class_data.sort_values('obj_loss', ascending=True, inplace=True)
-    class_data.reset_index(drop=True, inplace=True)
-
-    # Generate 'good_imgs' dataframe of images above desired objectness threshold
     if threshold == 1:
-        good_imgs = class_data # If threshold is 1, use entire dataset
+        # If threshold is 1, use entire dataset
+        good_imgs = pd.DataFrame({'filename':filenames, 'obj_loss':np.zeros(len(filenames))})
     else:
+        pth = './data/Robbins/loss_rank.csv'
+        data = pd.read_csv(pth)
+
+        # Generate dataframe of the images we want to use and store their objectness
+        class_data = pd.DataFrame({'filename':filenames, 'obj_loss':np.zeros(len(filenames))})
+        class_data.drop_duplicates(subset='filename', inplace=True)
+
+        for i, row in class_data.iterrows():
+            loss = data[data['img']==row['filename']]['obj'].iloc[0]
+            class_data.loc[i, 'obj_loss'] = loss
+
+        class_data.sort_values('obj_loss', ascending=True, inplace=True)
+        class_data.reset_index(drop=True, inplace=True)
+
+        # Generate 'good_imgs' dataframe of images above desired objectness threshold
         threshold_loss = class_data.iloc[int(len(class_data) * threshold)]['obj_loss']
         good_imgs = class_data[class_data['obj_loss'] < threshold_loss]
 
@@ -121,7 +121,7 @@ def main(deg_state_csv, threshold, stats=True):
     # Sort images by objectness and return df of images above threshold
     good_imgs = sort_obj_loss(files, threshold)
 
-    # Write the list desired images to a file
+    # Write the list of desired images to a file
     # This file is used in Colab to transfer the dataset
     write_image_list(good_imgs)
 

@@ -77,7 +77,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
 def run(epochs=10, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data'):
     print("Training\n")
     args = Args(epochs, seed, pretrained_weights, config)
-    print("Parameters: \nEpochs: {}, Seed: {}".format(args.epochs, args.seed))
+    print(f"Parameters: \nEpochs: {args.epochs}, Seed: {args.seed}")
 
     if args.seed != -1:
         provide_determinism(args.seed)
