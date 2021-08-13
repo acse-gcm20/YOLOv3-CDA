@@ -51,7 +51,7 @@ def write_image_list(imgs):
     with open(pth, 'w') as f:
         for _, row in imgs.iterrows():
             filename = row['filename']
-            f.write(filename+'.png/n')
+            f.write(filename+'.png\n')
 
 def sort_obj_loss(filenames, threshold):
     # Ranking of images by objectness loss
