@@ -5,6 +5,9 @@ import shutil
 
 def get_filename(latitude, longitude):
 
+    # Filenames are in format {lat}_{long} (.png/.txt)
+    # where lat and long refer to the top-left corner of the image
+    # Each image is 1 degree by 1 degree in size
     f_lat = int(latitude)
     f_long = int(longitude)
 
@@ -20,6 +23,7 @@ def get_filename(latitude, longitude):
 
 def generate_df(pth, save_csv=True):
 
+    # Read csv containing all processed craters
     data = pd.read_csv(pth)
 
     # Remove craters without deg_state and remove duplicates
@@ -50,10 +54,12 @@ def write_image_list(imgs):
             f.write(filename+'.png/n')
 
 def sort_obj_loss(filenames, threshold):
-    # Rank objectness loss of images with classified craters
+    # Ranking of images by objectness loss
     pth = './data/Robbins/loss_rank.csv'
 
     data = pd.read_csv(pth)
+
+    # Generate dataframe of the images we want to use and store their objectness
     class_data = pd.DataFrame({'filename':filenames, 'obj_loss':np.zeros(len(filenames))})
     class_data.drop_duplicates(subset='filename', inplace=True)
 
@@ -64,8 +70,9 @@ def sort_obj_loss(filenames, threshold):
     class_data.sort_values('obj_loss', ascending=True, inplace=True)
     class_data.reset_index(drop=True, inplace=True)
 
+    # Generate 'good_imgs' dataframe of images above desired objectness threshold
     if threshold == 1:
-        good_imgs = class_data
+        good_imgs = class_data # If threshold is 1, use entire dataset
     else:
         threshold_loss = class_data.iloc[int(len(class_data) * threshold)]['obj_loss']
         good_imgs = class_data[class_data['obj_loss'] < threshold_loss]
@@ -86,10 +93,11 @@ def sort_files(files, craters):
                 line = line.rstrip('/n').split(' ')
 
                 # if original crater and in deg_state df
+                # replace label with classification and write to new label file
                 if len(line) == 6 and line[-1] in ids.values:
                     new_line = line
                     row = craters[craters['v1'] == line[-1]].iloc[0]
-                    state = int(row['degradation_state'])
+                    state = int(row['degradation_state']) - 1 # Subtract one to zero index labels
                     new_line = ' '.join([str(state)] + line[1:]) + '/n'
 
                     new_label.write(new_line)
@@ -97,16 +105,26 @@ def sort_files(files, craters):
         new_label.close()
 
 def analyze(craters, imgs, threshold):
-    print(f'Crater Distribution (threshold = {threshold})')
+    # Get dataframe of all classified craters in the desired images
     df = craters[craters['filename'].isin(imgs['filename'])]
+
+    # Print dataset information 
+    print(f'Crater Distribution (threshold = {threshold})')
     print(df['degradation_state'].value_counts().sort_index().astype(int))
     print(f'Total craters: {len(df)}')
 
 def main(deg_state_csv, threshold, stats=True):
 
+    # Generate dataframe of classified craters and list of filenames containing them
     craters, files = generate_df(deg_state_csv)
+
+    # Sort images by objectness and return df of images above threshold
     good_imgs = sort_obj_loss(files, threshold)
+
+    # Write the list desired images to a file
+    # This file is used in Colab to transfer the dataset
     write_image_list(good_imgs)
 
+    # Print stats
     if stats:
         analyze(craters, good_imgs, threshold)
