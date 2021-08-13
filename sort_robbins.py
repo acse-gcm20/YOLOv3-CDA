@@ -111,10 +111,9 @@ def sort_files(craters):
                         state = (int(row['degradation_state']) - 1) # Subtract one to zero index labels
                         new_line = ' '.join([str(state)] + line[1:]) + '\n'
 
-                        new_label.write(new_line)
+                        with open(f'./data/Robbins/classifier/labels/{filename}.txt', 'w') as new_label:
+                            new_label.write(new_line)
             
-            new_label.close()
-
 def analyze(craters, imgs, threshold):
     # Get dataframe of all classified craters in the desired images
     df = craters[craters['filename'].isin(imgs['filename'])]
