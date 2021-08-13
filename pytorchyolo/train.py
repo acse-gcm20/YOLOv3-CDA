@@ -203,24 +203,16 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None, config='c
             # ############
             # Log progress
             # ############
-            if args.verbose:
-                print(AsciiTable(
-                    [
-                        ["Type", "Value"],
-                        ["IoU loss", float(loss_components[0])],
-                        ["Object loss", float(loss_components[1])],
-                        ["Class loss", float(loss_components[2])],
-                        ["Loss", float(loss_components[3])],
-                        ["Batch loss", to_cpu(loss).item()],
-                    ]).table)
-
-            # Tensorboard logging
-            tensorboard_log = [
-                ("train/iou_loss", float(loss_components[0])),
-                ("train/obj_loss", float(loss_components[1])),
-                ("train/class_loss", float(loss_components[2])),
-                ("train/loss", to_cpu(loss).item())]
-            #logger.list_of_scalars_summary(tensorboard_log, batches_done)
+            #if args.verbose:
+            print(AsciiTable(
+                [
+                    ["Type", "Value"],
+                    ["IoU loss", float(loss_components[0])],
+                    ["Object loss", float(loss_components[1])],
+                    ["Class loss", float(loss_components[2])],
+                    ["Loss", float(loss_components[3])],
+                    ["Batch loss", to_cpu(loss).item()],
+                ]).table)
 
             model.seen += imgs.size(0)
 
