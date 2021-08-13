@@ -48,11 +48,11 @@ def plot_stats(stats_file):
     axs[0,0].legend()
     axs[0,0].grid(True)
 
-    axs[0,1].scatter(recall_vals, precision_vals)
-    axs[0,1].set_xlim(-0.1, 1.1)
+    axs[0,1].plot(range(1, epochs+1), mAP_vals)
+    axs[0,1].set_xlim(1, epochs)
     axs[0,1].set_ylim(-0.1, 1.1)
-    axs[0,1].set_xlabel("Recall")
-    axs[0,1].set_ylabel("Precision")
+    axs[0,1].set_xlabel("Epoch")
+    axs[0,1].set_ylabel("mAP")
     axs[0,1].grid(True)
 
     axs[1,0].scatter(range(1, epochs+1), recall_vals)
