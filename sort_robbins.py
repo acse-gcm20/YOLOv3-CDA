@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import shutil
+from tqdm import tqdm
 
 def get_filename(latitude, longitude):
 
@@ -85,7 +86,7 @@ def sort_files(craters):
     with open('./data/Robbins/classifier/image_list', 'r') as img_list:
         files = [img.rstrip('.png\n') for img in img_list.readlines()]
 
-        for filename in files:
+        for filename in tqdm(files):
             # Copy image to classifier directory
             os.system(f'cp data/Robbins/crater_group_dataset/images/{filename}.png data/Robbins/classifier/images/')
 
