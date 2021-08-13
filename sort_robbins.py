@@ -47,7 +47,7 @@ def generate_df(pth, save_csv=True):
 def write_image_list(imgs):
     # Create a list of images containing classified craters
     # This list can be used in Colab to transfer the correct files
-    pth = './data/Robbins/classifier/image_list'
+    pth = 'data/Robbins/classifier/image_list'
     
     with open(pth, 'w') as f:
         for _, row in imgs.iterrows():
@@ -131,6 +131,11 @@ def main(deg_state_csv, threshold, stats=True):
 
     # Sort images by objectness and return df of images above threshold
     good_imgs = sort_obj_loss(files, threshold)
+
+    if not os.path.exists('data/Robbins/classifier'):
+        os.mkdir('data/Robbins/classifier')
+    else:
+        shutil.rmtree('data/Robbins/classifier/')
 
     # Write the list of desired images to a file
     # This file is used in Colab to transfer the dataset
