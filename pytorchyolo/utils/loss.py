@@ -144,13 +144,13 @@ def compute_loss(predictions, targets, model):  # predictions, targets, model
     BCEobj = nn.BCEWithLogitsLoss(
         pos_weight=torch.tensor([1.0], device=device))
 
-    # Class label smoothing https://arxiv.org/pdf/1902.04103.pdf eqn 3
-    cp, cn = smooth_BCE(eps=0.0)
+    # # Class label smoothing https://arxiv.org/pdf/1902.04103.pdf eqn 3
+    # cp, cn = smooth_BCE(eps=0.0)
 
-    # Focal loss
-    gamma = 0  # focal loss gamma
-    if gamma > 0:
-        BCEcls, BCEobj = FocalLoss(BCEcls, gamma), FocalLoss(BCEobj, gamma)
+    # # Focal loss
+    # gamma = 0  # focal loss gamma
+    # if gamma > 0:
+    #     BCEcls, BCEobj = FocalLoss(BCEcls, gamma), FocalLoss(BCEobj, gamma)
 
     # Losses
     # layer index, layer predictions
@@ -172,16 +172,16 @@ def compute_loss(predictions, targets, model):  # predictions, targets, model
             iou = bbox_iou(pbox.T, tbox[layer_index], x1y1x2y2=False, CIoU=True)
             lbox += (1.0 - iou).mean()  # iou loss
 
-            model.gr = 1
+            #model.gr = 1
 
             # Objectness
-            tobj[b, anchor, grid_j, grid_i] = \
-                (1.0 - model.gr) + model.gr * iou.detach().clamp(0).type(tobj.dtype)  # iou ratio
+            tobj[b, anchor, grid_j, grid_i] = iou.detach().clamp(0).type(tobj.dtype)  # iou ratio
+            #(1.0 - model.gr) + model.gr * 
 
             # Classification
             if ps.size(1) - 5 > 1:
-                t = torch.full_like(ps[:, 5:], cn, device=device)  # targets
-                t[range(num_targets), tcls[layer_index]] = cp
+                t = torch.zeros_like(ps[:, 5:], device=device)  # targets
+                t[range(num_targets), tcls[layer_index]] = 1
                 lcls += BCEcls(ps[:, 5:], t)  # BCE
 
         lobj += BCEobj(layer_predictions[..., 4], tobj) # obj loss
