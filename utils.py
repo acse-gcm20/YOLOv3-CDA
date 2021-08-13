@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from pytorchyolo.test import evaluate_model_file
 
 # Utility function to write lists to a text file
 def list_to_file(list_array, filename):
