@@ -87,7 +87,7 @@ def sort_files(craters):
 
         for filename in files:
             # Copy image to classifier directory
-            os.system(f'cp data/Robbins/crater_group_dataset/images/{filename} data/Robbins/classifier/images/')
+            os.system(f'cp data/Robbins/crater_group_dataset/images/{filename}.png data/Robbins/classifier/images/')
 
             # Create new label in classifier directory
             new_label = open(f'./data/Robbins/classifier/labels/{filename}.txt', 'w')
