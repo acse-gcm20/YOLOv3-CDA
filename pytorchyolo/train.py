@@ -203,7 +203,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None, config='c
             # ############
             # Log progress
             # ############
-            if batches_done % 100 == 0:
+            if batch_i % 300 == 0:
                 print(AsciiTable(
                     [
                         ["Type", "Value"],
