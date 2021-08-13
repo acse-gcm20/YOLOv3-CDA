@@ -85,12 +85,12 @@ def sort_files(craters):
     if not os.path.exists('data/Robbins/classifier/images/'):
         os.mkdir('data/Robbins/classifier/images/')
     else:
-        os.remove('data/Robbins/classifier/images/*')
+        shutil.rmtree('data/Robbins/classifier/images/')
 
     if not os.path.exists('data/Robbins/classifier/labels/'):
         os.mkdir('data/Robbins/classifier/labels/')
     else:
-        os.remove('data/Robbins/classifier/labels/*')
+        shutil.rmtree('data/Robbins/classifier/labels/')
 
     with open('./data/Robbins/classifier/image_list', 'r') as img_list:
         files = [img.rstrip('.png\n') for img in img_list.readlines()]
