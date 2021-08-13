@@ -82,16 +82,6 @@ def sort_obj_loss(filenames, threshold):
 def sort_files(craters):
     # Copy the relevant images and labels from processed Robbins data
     # Remove unclassified craters and correct class labels
-    if not os.path.exists('data/Robbins/classifier/images/'):
-        os.mkdir('data/Robbins/classifier/images/')
-    else:
-        shutil.rmtree('data/Robbins/classifier/images/')
-
-    if not os.path.exists('data/Robbins/classifier/labels/'):
-        os.mkdir('data/Robbins/classifier/labels/')
-    else:
-        shutil.rmtree('data/Robbins/classifier/labels/')
-
     with open('./data/Robbins/classifier/image_list', 'r') as img_list:
         files = [img.rstrip('.png\n') for img in img_list.readlines()]
 
@@ -146,7 +136,17 @@ def main(deg_state_csv, threshold, stats=True):
     # This file is used in Colab to transfer the dataset
     write_image_list(good_imgs)
 
-    # Transfer desired label files to separate directory
+    # Transfer desired image and label files to separate classifier directory
+    if not os.path.exists('data/Robbins/classifier/images/'):
+        os.mkdir('data/Robbins/classifier/images/')
+    else:
+        shutil.rmtree('data/Robbins/classifier/images/')
+
+    if not os.path.exists('data/Robbins/classifier/labels/'):
+        os.mkdir('data/Robbins/classifier/labels/')
+    else:
+        shutil.rmtree('data/Robbins/classifier/labels/')
+
     sort_files(craters)
 
     # Print stats
