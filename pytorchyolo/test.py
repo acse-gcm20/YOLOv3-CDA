@@ -83,7 +83,7 @@ def print_eval_stats(metrics_output, class_names, verbose):
             ap_table = [["Index", "Class", "AP"]]
             for i, c in enumerate(ap_class):
                 ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
-            print(AsciiTable(ap_table).table)
+            print('\n'+AsciiTable(ap_table).table)
         print(f"---- mAP {AP.mean():.5f} ----")
     else:
         print("---- mAP not measured (no detections found by model) ----")
