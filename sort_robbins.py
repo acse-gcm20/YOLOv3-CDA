@@ -169,23 +169,11 @@ def analyze(craters, imgs, threshold):
 
 def main(crater_dict, threshold, stats=True, clean=True):
 
-    # Generate dataframe of classified craters and list of filenames containing them
-    craters, files = generate_df(crater_dict)
-
-    # Sort images by objectness and return df of images above threshold
-    good_imgs = sort_obj_loss(files, threshold)
-
     if not os.path.exists('data/Robbins/classifier'):
         os.mkdir('data/Robbins/classifier')
     else:
         shutil.rmtree('data/Robbins/classifier/')
 
-    # Write the list of desired images to a file
-    # This file is used in Colab to transfer the dataset
-
-    write_image_list(good_imgs)
-
-    # Transfer desired image and label files to separate classifier directory
     if not os.path.exists('data/Robbins/classifier/images/'):
         os.mkdir('data/Robbins/classifier/images/')
     else:
@@ -196,6 +184,17 @@ def main(crater_dict, threshold, stats=True, clean=True):
     else:
         shutil.rmtree('data/Robbins/classifier/labels/')
 
+    # Generate dataframe of classified craters and list of filenames containing them
+    craters, files = generate_df(crater_dict)
+
+    # Sort images by objectness and return df of images above threshold
+    good_imgs = sort_obj_loss(files, threshold)
+
+    # Write the list of desired images to a file
+    # This file is used in Colab to transfer the dataset
+    write_image_list(good_imgs)
+
+    # Transfer desired image and label files to separate classifier directory
     if clean:
         clean('data/Robbins/classified_craters.csv')
         sort_files(craters, 'data/Robbins/classifier/clean_image_list.txt')
