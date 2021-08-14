@@ -25,8 +25,8 @@ from torchsummary import summary
 
 
 class Args:
-    def __init__(self, epochs, seed, pretrained_weights, config):
-        self.model = 'yolov3.cfg'
+    def __init__(model, self, epochs, seed, pretrained_weights, config):
+        self.model = model
         self.data = config
         self.epochs = epochs
         self.verbose = False
@@ -74,9 +74,9 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     return dataloader
 
 
-def run(epochs=10, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data'):
+def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data'):
     print("Training\n")
-    args = Args(epochs, seed, pretrained_weights, config)
+    args = Args(model, epochs, seed, pretrained_weights, config)
     print(f"Parameters: \nEpochs: {args.epochs}, Seed: {args.seed}")
 
     if args.seed != -1:

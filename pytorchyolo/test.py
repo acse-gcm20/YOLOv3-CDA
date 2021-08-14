@@ -20,10 +20,10 @@ from pytorchyolo.utils.parse_config import parse_data_config
 from pytorchyolo.utils.loss import compute_loss
 
 class Args:
-    def __init__(self, weights, img_size, batch_size):
-        self.model = 'yolov3.cfg'
+    def __init__(self, model, weights, config, img_size, batch_size):
+        self.model = model
         self.weights = weights
-        self.data = 'config/custom.data'
+        self.data = config
         self.batch_size = batch_size
         self.verbose = False
         self.img_size = img_size
@@ -172,7 +172,7 @@ def _create_validation_data_loader(img_path, batch_size, img_size, n_cpu):
     return dataloader
 
 
-def test(weights, img_size, batch_size=8):
+def test(model, weights, config, test_paths, img_size=416, batch_size=8):
     # print_environment_info()
     # parser = argparse.ArgumentParser(description="Evaluate validation data.")
     # parser.add_argument("-m", "--model", type=str, default="config/yolov3.cfg", help="Path to model definition file (.cfg)")
@@ -188,12 +188,12 @@ def test(weights, img_size, batch_size=8):
     # args = parser.parse_args()
     # print(f"Command line arguments: {args}")
 
-    args = Args(weights, data, img_size, batch_size)
+    args = Args(model, weights, config, img_size, batch_size)
 
     # Load configuration from data file
     data_config = parse_data_config(args.data)
     # Path to file containing all images for validation
-    valid_path = data_config["test"]
+    valid_path = test_paths
     class_names = load_classes(data_config["names"])  # List of class names
 
     #validationLoss, valLossComponents = compute_loss(outputs, targets, model)

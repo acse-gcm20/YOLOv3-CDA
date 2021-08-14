@@ -99,25 +99,26 @@ def clean_list(csv_path):
         
         states = []
         good = True
-        #print(f'File: {filename}')
         while good:
-            # Check lengths to verify all craters are original
             for label in labels:
                 label = label.rstrip('\n').split(' ')
+                # Check all labels have a crater ID
                 if label[-1] == '':
                     good = False
                     break
                 else:
-                    id = label[-1]
-                    ds = crater_dict[crater_dict['v1']==id]['degradation_state'].iloc[0]
+                    # Add degradation states to list
+                    crater_id = label[-1]
+                    ds = crater_dict[crater_dict['v1']==crater_id]['degradation_state'].iloc[0]
                     states.append(ds)
             if good:
+                # Only accept label files which exclusively contain classified craters
                 if True not in np.isnan(states):
+                    # Write image name to clean list file
                     clean_img_file.write(f'{filename}.png\n')
                     cnt +=1
                 break
             else:
-                #print('Bad')
                 good = False
 
     print(f'\n{cnt} images in data/Robbins/classifier/clean_image_list.txt\n')
@@ -169,6 +170,7 @@ def analyze(craters, imgs, threshold):
 
 def main(crater_dict, threshold, stats=True, clean=True):
 
+    # Create the necessary directories
     if not os.path.exists('data/Robbins/classifier'):
         os.makedirs('data/Robbins/classifier')
     else:
@@ -184,11 +186,6 @@ def main(crater_dict, threshold, stats=True, clean=True):
     else:
         shutil.rmtree('data/Robbins/classifier/labels/')
 
-    # os.mkdirs('data/Robbins/classifier')
-    # os.mkdirs('data/Robbins/classifier/images/')
-    # os.mkdirs('data/Robbins/classifier/labels/')
-
-
     # Generate dataframe of classified craters and list of filenames containing them
     craters, files = generate_df(crater_dict)
 
@@ -199,9 +196,12 @@ def main(crater_dict, threshold, stats=True, clean=True):
     # This file is used in Colab to transfer the dataset
     write_image_list(good_imgs)
 
-    # Transfer desired image and label files to separate classifier directory
+    # 'Cleaning' the dataset will remove all images that contain unclassified craters
+    # A new list of desired images will be written
     if clean:
         clean_list('data/Robbins/crater_dictionary.csv')
+
+        # Transfer desired image and label files to separate classifier directory
         sort_files(craters, 'data/Robbins/classifier/clean_image_list.txt')
     else:
         sort_files(craters, 'data/Robbins/classifier/image_list.txt')

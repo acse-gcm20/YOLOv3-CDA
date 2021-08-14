@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import random
 import numpy as np
 from pytorchyolo.test import evaluate_model_file
 from sklearn.metrics import auc
+from PIL import Image
 
 # Utility function to write lists to a text file
 def list_to_file(list_array, filename):
@@ -101,3 +104,57 @@ class PRcurve:
         ax.set_xlabel("Recall")
         ax.set_ylabel("Precision")
         ax.grid(True)
+
+def get_rects(fname, label_dir):
+    with open(f'{label_dir}{fname.rstrip(".png")}.txt', 'r') as f:
+        labels = f.readlines()
+    
+    rects = []
+
+    if len(labels[0]) == 1:
+        state = labels[0]
+        w = float(labels[3])*593
+        h = float(labels[4])*593
+        x = float(labels[1])*593 - w/2
+        y = float(labels[2])*593 - h/2
+        rects.append([state, x, y, w, h])
+    else:
+        for label in labels:
+            label = label.rstrip('\n').split(' ')
+            state = label[0]
+            w = float(label[3])*593
+            h = float(label[4])*593
+            x = float(label[1])*593 - w/2
+            y = float(label[2])*593 - h/2
+            coords = (state, x, y, w, h)
+            rects.append(coords)   
+
+    return rects
+
+def plot_image_list(image_list_path, image_dir, label_dir, label=True):
+    imgs = np.loadtxt(image_list_path, dtype=str)
+
+    fig = plt.figure(figsize=(16,16))
+
+    for i in range(16):
+        r = random.randint(0, 139)
+        fname = imgs[r]
+        im = Image.open(image_dir + fname)
+        print(im)
+
+        # Create figure and axes
+        ax = fig.add_subplot(4,4,i+1)
+
+        # Display the image
+        ax.imshow(im)
+        ax.set_title(fname)
+
+        # Create a Rectangle patch
+        rects = get_rects(fname, label_dir)
+        for coords in rects:
+            rect = patches.Rectangle((coords[1], coords[2]), coords[3], coords[4], linewidth=2, edgecolor='r', facecolor='none')
+            ax.add_patch(rect)
+            if label:
+                plt.text(coords[1], coords[2]-10, coords[0])
+
+    plt.show()
