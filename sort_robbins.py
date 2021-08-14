@@ -79,7 +79,7 @@ def sort_obj_loss(filenames, threshold):
 
     return good_imgs
 
-def clean(csv_path):
+def clean_list(csv_path):
     # Load crater dictionary into dataframe
     crater_dict = pd.read_csv(csv_path)
 
@@ -196,7 +196,7 @@ def main(crater_dict, threshold, stats=True, clean=True):
 
     # Transfer desired image and label files to separate classifier directory
     if clean:
-        clean('data/Robbins/crater_dictionary.csv')
+        clean_list('data/Robbins/crater_dictionary.csv')
         sort_files(craters, 'data/Robbins/classifier/clean_image_list.txt')
     else:
         sort_files(craters, 'data/Robbins/classifier/image_list.txt')
