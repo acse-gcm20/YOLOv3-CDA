@@ -89,7 +89,13 @@ def save_label_predictions(image_path, preds, output_path, cnt):
         label_file = open(output_path+f'/labels/{fname}.txt', 'a')
 
         if cnt == 1:
-            label = f'{preds[4]} {preds[0]} {preds[1]} {preds[2]} {preds[3]}\n'
+            print(preds)
+            state = preds[4]
+            x = preds[0]
+            y = preds[1]
+            w = preds[2]
+            h = preds[3]
+            label = f'{state} {x} {y} {w} {h}\n'
             label_file.write(label)
         else:
             for pred in preds:
