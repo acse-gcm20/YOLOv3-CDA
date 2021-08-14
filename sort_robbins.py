@@ -170,17 +170,17 @@ def analyze(craters, imgs, threshold):
 def main(crater_dict, threshold, stats=True, clean=True):
 
     if not os.path.exists('data/Robbins/classifier'):
-        os.mkdirs('data/Robbins/classifier')
+        os.makedirs('data/Robbins/classifier')
     else:
         shutil.rmtree('data/Robbins/classifier/')
 
     if not os.path.exists('data/Robbins/classifier/images/'):
-        os.mkdirs('data/Robbins/classifier/images/')
+        os.makedirs('data/Robbins/classifier/images/')
     else:
         shutil.rmtree('data/Robbins/classifier/images/')
 
     if not os.path.exists('data/Robbins/classifier/labels/'):
-        os.mkdirs('data/Robbins/classifier/labels/')
+        os.makedirs('data/Robbins/classifier/labels/')
     else:
         shutil.rmtree('data/Robbins/classifier/labels/')
 
