@@ -79,10 +79,54 @@ def sort_obj_loss(filenames, threshold):
 
     return good_imgs
 
-def sort_files(craters):
+def clean(csv_path):
+    # Load crater dictionary into dataframe
+    crater_dict = pd.read_csv(csv_path)
+
+    # Open list of good images
+    with open('data/Robbins/classifier/image_list.txt', 'r') as img_list:
+        imgs = img_list.readlines()
+
+    filenames = [img.rstrip('.png\n') for img in imgs]
+
+    # Create new clean image list file
+    clean_img_file = open('data/Robbins/classifier/clean_image_list.txt', 'w')
+
+    cnt = 0
+    for filename in tqdm(filenames):
+        with open(f'data/Robbins/crater_group_dataset/labels/{filename}.txt') as label_file:
+            labels = label_file.readlines()
+        
+        states = []
+        good = True
+        #print(f'File: {filename}')
+        while good:
+            # Check lengths to verify all craters are original
+            for label in labels:
+                label = label.rstrip('\n').split(' ')
+                if label[-1] == '':
+                    good = False
+                    break
+                else:
+                    id = label[-1]
+                    ds = crater_dict[crater_dict['v1']==id]['degradation_state'].iloc[0]
+                    states.append(ds)
+            if good:
+                if True not in np.isnan(states):
+                    clean_img_file.write(f'{filename}.png\n')
+                    cnt +=1
+                break
+            else:
+                #print('Bad')
+                good = False
+
+    print(f'\n{cnt} images in data/Robbins/classifier/clean_image_list.txt')
+    clean_img_file.close()
+
+def sort_files(craters, img_list_path):
     # Copy the relevant images and labels from processed Robbins data
     # Remove unclassified craters and correct class labels
-    with open('./data/Robbins/classifier/image_list.txt', 'r') as img_list:
+    with open(img_list_path, 'r') as img_list:
         files = [img.rstrip('.png\n') for img in img_list.readlines()]
 
         for filename in tqdm(files):
@@ -123,7 +167,7 @@ def analyze(craters, imgs, threshold):
     print(f'Total craters: {len(df)}')
     print(f'Total images: {len(imgs)}')
 
-def main(crater_dict, threshold, stats=True):
+def main(crater_dict, threshold, stats=True, clean=True):
 
     # Generate dataframe of classified craters and list of filenames containing them
     craters, files = generate_df(crater_dict)
@@ -138,6 +182,7 @@ def main(crater_dict, threshold, stats=True):
 
     # Write the list of desired images to a file
     # This file is used in Colab to transfer the dataset
+
     write_image_list(good_imgs)
 
     # Transfer desired image and label files to separate classifier directory
@@ -151,7 +196,11 @@ def main(crater_dict, threshold, stats=True):
     else:
         shutil.rmtree('data/Robbins/classifier/labels/')
 
-    sort_files(craters)
+    if clean:
+        clean('data/Robbins/classified_craters.csv')
+        sort_files(craters, 'data/Robbins/classifier/clean_image_list.txt')
+    else:
+        sort_files(craters, 'data/Robbins/classifier/image_list.txt')
 
     # Print stats
     if stats:
