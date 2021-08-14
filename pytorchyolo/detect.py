@@ -64,8 +64,7 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
     :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
     :type nms_thres: float, optional
     """
-    os.makedirs(output_path+'/labels', exist_ok=True)
-
+    print(f'Outputting to: {output_path}')
     if not os.path.exists(output_path+'/labels/'):
         os.makedirs(output_path+'/labels/')
     else:
