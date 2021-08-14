@@ -65,10 +65,6 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
     :type nms_thres: float, optional
     """
     print(f'Outputting to: {output_path}')
-    if not os.path.exists(output_path+'/labels/'):
-        os.makedirs(output_path+'/labels/')
-    else:
-        shutil.rmtree(output_path+'/labels/')
 
     dataloader = _create_data_loader(img_path, batch_size, img_size, n_cpu)
     model = load_model(model_path, weights_path)
@@ -86,7 +82,7 @@ def save_label_predictions(image_path, preds, output_path, cnt):
 
     if cnt != 0:
         fname = os.path.basename(image_path).rstrip('.png\n')
-        label_file = open(output_path+f'/labels/{fname}.txt', 'a')
+        label_file = open(output_path+f'/{fname}.txt', 'a')
 
         if cnt == 1:
             print(preds)
