@@ -203,8 +203,8 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None, config='c
             # ############
             # Log progress
             # ############
-            if batch_i % (len(dataloader)//2) == 0 and batch_i > 1:
-                print(AsciiTable(
+            if batch_i % (len(dataloader)//4) == 0 and batch_i > 1:
+                print('\n'+AsciiTable(
                     [
                         ["Type", "Value"],
                         ["IoU loss", float(loss_components[0])],
