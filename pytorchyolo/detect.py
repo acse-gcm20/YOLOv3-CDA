@@ -63,6 +63,13 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
     :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
     :type nms_thres: float, optional
     """
+    os.makedirs(output_path+'/labels', exist_ok=True)
+
+    if not os.path.exists(output_path+'/labels/'):
+        os.makedirs(output_path+'/labels/')
+    else:
+        shutil.rmtree(output_path+'/labels/')
+
     dataloader = _create_data_loader(img_path, batch_size, img_size, n_cpu)
     model = load_model(model_path, weights_path)
     img_detections, imgs = detect(
@@ -75,11 +82,19 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
     _draw_and_save_output_images(
         img_detections, imgs, img_size, output_path, classes)
 
-    save_label_predictions(img_detections, output_path)
+def save_label_predictions(image_path, preds, output_path, cnt):
 
-def save_label_predictions(preds, output_path):
-    os.makedirs(output_path+'/labels')
-    print(preds.cpu())
+    if cnt != 0:
+        fname = os.path.basename(image_path).rstrip('.png\n')
+        label_file = open(output_path+f'/labels/{fname}.txt', 'a')
+
+        if cnt == 1:
+            label = f'{preds[4]} {preds[0]} {preds[1]} {preds[2]} {preds[3]}\n'
+            label_file.write(label)
+        else:
+            for pred in preds:
+                label = f'{pred[4]} {pred[0]} {pred[1]} {pred[2]} {pred[3]}\n'
+                label_file.write(label)
 
 def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
     """Inferences one image with model.
@@ -158,42 +173,6 @@ def detect(model, dataloader, output_path, img_size, conf_thres, nms_thres):
         imgs.extend(img_paths)
     return img_detections, imgs
     
-# def detect(weights, image_folder, image_paths):
-#     """Inferences images with model."""
-#     args = Args(weights, image_folder)
-
-#     dataloader = _create_data_loader(image_paths,
-#                                      args.batch_size,
-#                                      args.img_size,
-#                                      args.n_cpu)
-
-#     model = load_model(args.model, args.weights)
-
-#     # Create output directory, if missing
-#     os.makedirs(args.output, exist_ok=True)
-
-#     model.eval()  # Set model to evaluation mode
-
-#     Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
-
-#     img_detections = []  # Stores detections for each image index
-#     imgs = []  # Stores image paths
-
-#     for (img_paths, input_imgs) in tqdm.tqdm(dataloader, desc="Detecting"):
-#         # Configure input
-#         input_imgs = Variable(input_imgs.type(Tensor))
-
-#         # Get detections
-#         with torch.no_grad():
-#             detections = model(input_imgs)
-#             detections = non_max_suppression(detections, args.conf_thres, args.nms_thres)
-
-#         # Store image and detections
-#         img_detections.extend(detections)
-#         imgs.extend(img_paths)
-#     return img_detections, imgs
-
-
 def _draw_and_save_output_images(img_detections, imgs, img_size, output_path, classes):
     """Draws detections in output images and stores them.
 
@@ -214,7 +193,6 @@ def _draw_and_save_output_images(img_detections, imgs, img_size, output_path, cl
         print(f"Image {image_path}:")
         _draw_and_save_output_image(
             image_path, detections, img_size, output_path, classes)
-
 
 def _draw_and_save_output_image(image_path, detections, img_size, output_path, classes):
     """Draws detections in output image and stores this.
@@ -243,12 +221,16 @@ def _draw_and_save_output_image(image_path, detections, img_size, output_path, c
     cmap = plt.get_cmap("tab20b")
     colors = [cmap(i) for i in np.linspace(0, 1, n_cls_preds)]
     bbox_colors = random.sample(colors, n_cls_preds)
-    for x1, y1, x2, y2, conf, cls_pred in detections:
 
+    preds = []
+    cnt = 0
+    for x1, y1, x2, y2, conf, cls_pred in detections:
         print(f"\t+ Label: {classes[int(cls_pred)]} | Confidence: {conf.item():0.4f}")
 
         box_w = x2 - x1
         box_h = y2 - y1
+        preds.append([x1, y1, box_w, box_h, cls_pred])
+        cnt += 1
 
         color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
         # Create a Rectangle patch
@@ -264,6 +246,7 @@ def _draw_and_save_output_image(image_path, detections, img_size, output_path, c
             verticalalignment="top",
             bbox={"color": color, "pad": 0})
 
+    save_label_predictions(image_path, preds, output_path, cnt)
     # Save generated image with detections
     plt.axis("off")
     plt.gca().xaxis.set_major_locator(NullLocator())
