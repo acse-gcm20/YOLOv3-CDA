@@ -42,7 +42,7 @@ def generate_df(pth, save_csv=True):
     if save_csv:
         craters.to_csv('./data/Robbins/classified_craters.csv')
 
-    return craters, filenames
+    return craters, list(set(filenames))
 
 def write_image_list(imgs):
     # Create a list of images containing classified craters
@@ -60,12 +60,11 @@ def sort_obj_loss(filenames, threshold):
         # If threshold is 1, use entire dataset
         good_imgs = pd.DataFrame({'filename':filenames, 'obj_loss':np.zeros(len(filenames))})
     else:
-        pth = './data/Robbins/loss_rank.csv'
-        data = pd.read_csv(pth)
+        data = pd.read_csv('data/Robbins/loss_rank.csv')
 
         # Generate dataframe of the images we want to use and store their objectness
         class_data = pd.DataFrame({'filename':filenames, 'obj_loss':np.zeros(len(filenames))})
-        class_data.drop_duplicates(subset='filename', inplace=True)
+        #class_data.drop_duplicates(subset='filename', inplace=True)
 
         for i, row in class_data.iterrows():
             loss = data[data['img']==row['filename']]['obj'].iloc[0]
@@ -124,10 +123,10 @@ def analyze(craters, imgs, threshold):
     print(f'Total craters: {len(df)}')
     print(f'Total images: {len(imgs)}')
 
-def main(deg_state_csv, threshold, stats=True):
+def main(crater_dict, threshold, stats=True):
 
     # Generate dataframe of classified craters and list of filenames containing them
-    craters, files = generate_df(deg_state_csv)
+    craters, files = generate_df(crater_dict)
 
     # Sort images by objectness and return df of images above threshold
     good_imgs = sort_obj_loss(files, threshold)
