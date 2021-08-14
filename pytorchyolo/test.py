@@ -196,9 +196,6 @@ def test(model, weights, config, test_paths, img_size=416, batch_size=8):
     valid_path = test_paths
     class_names = load_classes(data_config["names"])  # List of class names
 
-    #validationLoss, valLossComponents = compute_loss(outputs, targets, model)
-    #print("Validation Loss:", float(valLossComponents[3]))
-
     precision, recall, AP, f1, ap_class = evaluate_model_file(
         args.model,
         args.weights,
