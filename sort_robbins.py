@@ -120,7 +120,7 @@ def clean_list(csv_path):
                 #print('Bad')
                 good = False
 
-    print(f'\n{cnt} images in data/Robbins/classifier/clean_image_list.txt')
+    print(f'\n{cnt} images in data/Robbins/classifier/clean_image_list.txt\n')
     clean_img_file.close()
 
 def sort_files(craters, img_list_path):
@@ -201,7 +201,6 @@ def main(crater_dict, threshold, stats=True, clean=True):
 
     # Transfer desired image and label files to separate classifier directory
     if clean:
-        print('\nCleaning\n')
         clean_list('data/Robbins/crater_dictionary.csv')
         sort_files(craters, 'data/Robbins/classifier/clean_image_list.txt')
     else:

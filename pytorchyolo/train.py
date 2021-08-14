@@ -203,7 +203,7 @@ def run(epochs=10, seed=42, pretrained_weights=None, append_file=None, config='c
             # ############
             # Log progress
             # ############
-            if batch_i % 300 == 0 and batch_i > 1:
+            if batch_i % (len(dataloader)//2) == 0 and batch_i > 1:
                 print(AsciiTable(
                     [
                         ["Type", "Value"],
