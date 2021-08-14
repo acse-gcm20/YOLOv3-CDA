@@ -79,7 +79,7 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
 
 def save_label_predictions(preds, output_path):
     os.makedirs(output_path+'/labels')
-    print(preds)
+    print(preds.cpu())
 
 def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
     """Inferences one image with model.
