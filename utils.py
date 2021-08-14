@@ -106,7 +106,7 @@ class PRcurve:
         ax.grid(True)
 
 def get_rects(fname, label_dir):
-    with open(f'{label_dir}{fname.rstrip(".png")}.txt', 'r') as f:
+    with open(f'{label_dir}/{fname.rstrip(".png")}.txt', 'r') as f:
         labels = f.readlines()
     
     rects = []
@@ -131,16 +131,15 @@ def get_rects(fname, label_dir):
 
     return rects
 
-def plot_image_list(image_list_path, image_dir, label_dir, label=True):
-    imgs = np.loadtxt(image_list_path, dtype=str)
+def plot_image_list(image_dir, label_dir, label=True):
+    imgs = os.listdir(image_dir)
 
     fig = plt.figure(figsize=(16,16))
 
     for i in range(16):
         r = random.randint(0, 139)
         fname = imgs[r]
-        im = Image.open(image_dir + fname)
-        print(im)
+        im = Image.open(f'{image_dir}/{fname}')
 
         # Create figure and axes
         ax = fig.add_subplot(4,4,i+1)
