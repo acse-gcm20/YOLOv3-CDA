@@ -166,3 +166,69 @@ def plot_image_dir(image_dir, label_dir, label=True):
                 plt.text(coords[1], coords[2]-10, coords[0])
 
     plt.show()
+
+def comparison_plot(img_source, label_source, detections_dir, num):
+
+    detection_files = os.listdir(detections_dir)
+    fnames = [name.rstrip('.txt') for name in detection_files]
+
+    images = [f'{img_source}/{name}.png' for name in fnames]
+    label_files = [f'{label_source}/{name}.txt' for name in fnames]
+    detections = [f'{detections_dir}/{name}.txt' for name in fnames]
+
+    fig, axs = plt.subplots(num, 2, figsize=(12, 6*num))
+
+    for i, (img, label, detection) in enumerate(zip(images, label_files, detections)):
+        
+        fname = os.path.basename(img).rstrip('.png')
+        im = Image.open(img)
+        ax = axs[i]
+
+        # Ground Truth
+        ax[0].imshow(im)
+        ax[0].set_title(f'{fname} Ground Truth')
+        
+        # Add labels
+        rects = get_rects(fname, label_source, img_scale=593)
+        for coords in rects:
+            rect = patches.Rectangle((coords[1], coords[2]), coords[3], coords[4], linewidth=2, edgecolor='r', facecolor='none')
+            ax[0].add_patch(rect)
+            if label:
+                ax[0].text(coords[1], coords[2]-8, coords[0], color='r', fontsize=12, fontweight='bold')
+
+        # Detections
+        ax[1].imshow(im)
+        ax[1].set_title(f'{fname} Detections')
+
+        # Add labels
+        rects = get_rects(fname, detections_dir, center=False)
+        for coords in rects:
+            rect = patches.Rectangle((coords[1], coords[2]), coords[3], coords[4], linewidth=2, edgecolor='b', facecolor='none')
+            ax[1].add_patch(rect)
+            if label:
+                ax[1].text(coords[1], coords[2]-8, coords[0], color='b', fontsize=12, fontweight='bold')
+
+        if i == num-1:
+            break
+
+    plt.show()
+
+def list_file_2_dir(list_file, dir)
+    """Read list of images and move images and corresponding labels to desired dir"""
+    os.makedirs(dir+'/images/', exist_ok=True)
+    os.makedirs(dir+'/labels/', exist_ok=True)
+
+    with open(list_file) as f:
+        imgs = f.readlines()
+
+    imgs = [img.rstrip(' \n') for img in imgs]
+    for img_path in imgs:
+        (img_dir, img) = os.path.split(img_path)
+        lbl_dir = img_dir.rstrip('images')+'labels'
+        lbl = img.rstrip('png')+'txt'
+
+        os.system(f'cp {img_dir}/{img} data/test_set/images')
+        os.system(f'cp {lbl_dir}/{lbl} data/test_set/labels')
+
+    print(f'{len(os.listdir("data/test_set/images/"))} images')
+    print(f'{len(os.listdir("data/test_set/labels/"))} labels')
