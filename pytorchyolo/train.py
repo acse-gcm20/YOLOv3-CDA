@@ -74,7 +74,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     return dataloader
 
 
-def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data'):
+def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data', show_loss=False):
     print("Training\n")
     args = Args(model, epochs, seed, pretrained_weights, config)
     print(f"Parameters: \nEpochs: {args.epochs}, Seed: {args.seed}")
@@ -203,7 +203,7 @@ def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, confi
             # ############
             # Log progress
             # ############
-            if batch_i % (len(dataloader)//4) == 0 and batch_i > 1:
+            if show_loss and batch_i % (len(dataloader)//4) == 0 and batch_i > 1:
                 print('\n'+AsciiTable(
                     [
                         ["Type", "Value"],
