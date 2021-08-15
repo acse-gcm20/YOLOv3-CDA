@@ -111,9 +111,9 @@ def get_rects(fname, label_dir, img_scale=1, center=True):
     pth = f'{label_dir}/{fname.rstrip(".png")}.txt'
 
     if center:
-        shift = 1:
+        shift = 1
     else:
-        shift = 0:
+        shift = 0
 
     if os.path.getsize(pth) != 0:
         with open(pth, 'r') as f:
