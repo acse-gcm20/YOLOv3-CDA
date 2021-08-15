@@ -5,6 +5,7 @@ from __future__ import division
 import os
 import tqdm
 import numpy as np
+import pandas as pd
 
 import torch
 from torch.utils.data import DataLoader
@@ -75,15 +76,16 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu,
         worker_init_fn=worker_seed_set)
     return dataloader
 
-def save_losses(model_path, weights, config, paths):
-    print(np.loadtxt(paths))
+def save_losses(model_path, weights, paths):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = load_model(model_path, weights)
     dataloader = _create_data_loader(paths, 1, model.hyperparams['height'], 2)
 
-    for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Calculating Losses")):
+    loss_df = pd.DataFrame(columns=['img', 'iou_loss', 'obj_loss', 'cls_loss', 'loss'])
 
+    for i, (fname, imgs, targets) in enumerate(dataloader):
+        img_name = os.path.basename(fname[0])
         imgs = imgs.to(device, non_blocking=True)
         targets = targets.to(device)
         
@@ -94,7 +96,14 @@ def save_losses(model_path, weights, config, paths):
         obj = float(losses[1])
         cls_loss = float(losses[2])
         total = float(losses[3])
-        print(f'{iou} {obj} {cls_loss} {total}')
+        loss_df = loss_df.append({'img': img_name,
+                        'iou_loss': iou,
+                        'obj_loss': obj,
+                        'cls_loss': cls_loss,
+                        'loss': total}, ignore_index=True)
+
+    loss_df.to_csv('loss_table.csv')
+    print('Loss table saved to loss_table.csv')
 
 def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data', show_loss=False):
     print("Training\n")
