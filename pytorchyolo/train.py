@@ -4,6 +4,7 @@ from __future__ import division
 
 import os
 import tqdm
+import numpy as np
 
 import torch
 from torch.utils.data import DataLoader
