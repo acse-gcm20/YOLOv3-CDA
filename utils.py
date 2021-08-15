@@ -111,25 +111,25 @@ def get_rects(fname, label_dir, img_scale=1):
         labels = f.readlines()
     
     rects = []
-
-    if len(labels[0]) == 1:
-        label = labels[0]
-        state = label[0]
-        w = float(label[3])*img_scale
-        h = float(label[4])*img_scale
-        x = float(label[1])*img_scale - w/2
-        y = float(label[2])*img_scale - h/2
-        rects.append([state, x, y, w, h])
-    else:
-        for label in labels:
-            label = label.rstrip('\n').split(' ')
+    if len(labels) != 0:
+        if len(labels[0]) == 1:
+            label = labels[0]
             state = label[0]
             w = float(label[3])*img_scale
             h = float(label[4])*img_scale
             x = float(label[1])*img_scale - w/2
             y = float(label[2])*img_scale - h/2
-            coords = (state, x, y, w, h)
-            rects.append(coords)   
+            rects.append([state, x, y, w, h])
+        else:
+            for label in labels:
+                label = label.rstrip('\n').split(' ')
+                state = label[0]
+                w = float(label[3])*img_scale
+                h = float(label[4])*img_scale
+                x = float(label[1])*img_scale - w/2
+                y = float(label[2])*img_scale - h/2
+                coords = (state, x, y, w, h)
+                rects.append(coords)   
 
     return rects
 
