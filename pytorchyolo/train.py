@@ -41,7 +41,8 @@ class Args:
         self.logdir = 'logs'
         self.seed = seed
 
-def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_training=False):
+def _create_data_loader(img_path, batch_size, img_size, n_cpu, 
+                        multiscale_training=False, shuffle_order=True):
     """Creates a DataLoader for training.
 
     :param img_path: Path to file containing all paths to training images.
@@ -66,7 +67,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     dataloader = DataLoader(
         dataset,
         batch_size=batch_size,
-        shuffle=True,
+        shuffle=shuffle_order,
         num_workers=n_cpu,
         pin_memory=True,
         collate_fn=dataset.collate_fn,
@@ -74,20 +75,25 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
     return dataloader
 
 def save_losses(model_path, weights, config, paths):
-    dataloader = _create_data_loader(paths, 1, model.hyperparams['height'], 2)
+    print(np.loadtxt(paths))
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = load_model(model_path, weights)
+    dataloader = _create_data_loader(paths, 1, model.hyperparams['height'], 2)
 
-    # # model.train()  # Set model to training mode
+    for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Calculating Losses")):
 
-    # for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Calculating Losses")):
-
-    #     imgs = imgs.to(device, non_blocking=True)
-    #     targets = targets.to(device)
+        imgs = imgs.to(device, non_blocking=True)
+        targets = targets.to(device)
         
-    #     outputs = model(imgs)
+        outputs = model(imgs)
 
-    #     loss, loss_components = compute_loss(outputs, targets, model)
+        loss, losses = compute_loss(outputs, targets, model)
+        iou = float(losses[0])
+        obj = float(losses[1])
+        cls_loss = float(losses[2])
+        total = float(losses[3])
+        print(f'{iou} {obj} {cls_loss} {total}')
 
 def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data', show_loss=False):
     print("Training\n")
