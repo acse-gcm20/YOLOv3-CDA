@@ -73,6 +73,21 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
         worker_init_fn=worker_seed_set)
     return dataloader
 
+def save_losses(model_path, weights, config, paths):
+    dataloader = _create_data_loader(paths, 1, model.hyperparams['height'], 2)
+
+    model = load_model(model_path, weights)
+
+    # # model.train()  # Set model to training mode
+
+    # for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Calculating Losses")):
+
+    #     imgs = imgs.to(device, non_blocking=True)
+    #     targets = targets.to(device)
+        
+    #     outputs = model(imgs)
+
+    #     loss, loss_components = compute_loss(outputs, targets, model)
 
 def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data', show_loss=False):
     print("Training\n")

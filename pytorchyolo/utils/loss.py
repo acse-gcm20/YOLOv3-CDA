@@ -144,14 +144,6 @@ def compute_loss(predictions, targets, model):  # predictions, targets, model
     BCEobj = nn.BCEWithLogitsLoss(
         pos_weight=torch.tensor([1.0], device=device))
 
-    # # Class label smoothing https://arxiv.org/pdf/1902.04103.pdf eqn 3
-    # cp, cn = smooth_BCE(eps=0.0)
-
-    # # Focal loss
-    # gamma = 0  # focal loss gamma
-    # if gamma > 0:
-    #     BCEcls, BCEobj = FocalLoss(BCEcls, gamma), FocalLoss(BCEobj, gamma)
-
     # Losses
     # layer index, layer predictions
     for layer_index, layer_predictions in enumerate(predictions):
@@ -186,9 +178,6 @@ def compute_loss(predictions, targets, model):  # predictions, targets, model
 
         lobj += BCEobj(layer_predictions[..., 4], tobj) # obj loss
 
-    #lbox *= 0.05 * (3. / 2)
-    #lobj *= (3. / 2)
-    #lcls *= 0.31
     batch_size = tobj.shape[0]  # batch size
 
     loss = lbox + lobj + lcls
