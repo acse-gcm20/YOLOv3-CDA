@@ -107,11 +107,13 @@ class PRcurve:
         ax.grid(True)
 
 def get_rects(fname, label_dir, img_scale=1):
-    with open(f'{label_dir}/{fname.rstrip(".png")}.txt', 'r') as f:
-        labels = f.readlines()
-    
     rects = []
-    if len(labels) != 0:
+    pth = f'{label_dir}/{fname.rstrip(".png")}.txt'
+
+    if os.path.getsize(pth) != 0:
+        with open(pth, 'r') as f:
+            labels = f.readlines()
+        
         if len(labels[0]) == 1:
             label = labels[0]
             state = label[0]
@@ -133,7 +135,7 @@ def get_rects(fname, label_dir, img_scale=1):
 
     return rects
 
-def plot_image_list(image_dir, label_dir, label=True):
+def plot_image_dir(image_dir, label_dir, label=True):
     imgs = os.listdir(image_dir)
 
     fig = plt.figure(figsize=(16,16))
