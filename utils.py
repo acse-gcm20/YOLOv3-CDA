@@ -106,9 +106,14 @@ class PRcurve:
         ax.set_ylabel("Precision")
         ax.grid(True)
 
-def get_rects(fname, label_dir, img_scale=1):
+def get_rects(fname, label_dir, img_scale=1, center=True):
     rects = []
     pth = f'{label_dir}/{fname.rstrip(".png")}.txt'
+
+    if center:
+        shift = 1:
+    else:
+        shift = 0:
 
     if os.path.getsize(pth) != 0:
         with open(pth, 'r') as f:
@@ -119,8 +124,8 @@ def get_rects(fname, label_dir, img_scale=1):
             state = label[0]
             w = float(label[3])*img_scale
             h = float(label[4])*img_scale
-            x = float(label[1])*img_scale - w/2
-            y = float(label[2])*img_scale - h/2
+            x = float(label[1])*img_scale - (w/2 * shift)
+            y = float(label[2])*img_scale - (h/2 * shift)
             rects.append([state, x, y, w, h])
         else:
             for label in labels:
@@ -128,8 +133,8 @@ def get_rects(fname, label_dir, img_scale=1):
                 state = label[0]
                 w = float(label[3])*img_scale
                 h = float(label[4])*img_scale
-                x = float(label[1])*img_scale - w/2
-                y = float(label[2])*img_scale - h/2
+                x = float(label[1])*img_scale - (w/2 * shift)
+                y = float(label[2])*img_scale - (h/2 * shift)
                 coords = (state, x, y, w, h)
                 rects.append(coords)   
 
