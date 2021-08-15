@@ -66,6 +66,9 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
     """
     print(f'Outputting to: {output_path}')
 
+    os.makedirs(output_path+'/images/', exist_ok=True)
+    os.makedirs(output_path+'/labels/', exist_ok=True)
+
     dataloader = _create_data_loader(img_path, batch_size, img_size, n_cpu)
     model = load_model(model_path, weights_path)
     img_detections, imgs = detect(
@@ -82,21 +85,16 @@ def save_label_predictions(image_path, preds, output_path, cnt):
 
     if cnt != 0:
         fname = os.path.basename(image_path).rstrip('.png\n')
-        label_file = open(output_path+f'/{fname}.txt', 'a')
-
-        if cnt == 1:
-            print(preds)
-            # state = preds[4]
-            # x = preds[0]
-            # y = preds[1]
-            # w = preds[2]
-            # h = preds[3]
-            # label = f'{state} {x} {y} {w} {h}\n'
-            # label_file.write(label)
-        else:
-            for pred in preds:
-                label = f'{pred[4]} {pred[0]} {pred[1]} {pred[2]} {pred[3]}\n'
-                # label_file.write(label)
+        label_file = open(output_path+f'/labels/{fname}.txt', 'w')
+        for pred in preds:
+            state = pred[4].cpu().numpy()
+            x = pred[0].cpu().numpy()
+            y = pred[1].cpu().numpy()
+            w = pred[2].cpu().numpy()
+            h = pred[3].cpu().numpy()
+            label = '%i %.3f %.3f %.3f %.3f\n' % (state, x, y, w, h)
+            label_file.write(label)
+        label_file.close()
 
 def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
     """Inferences one image with model.
@@ -254,7 +252,7 @@ def _draw_and_save_output_image(image_path, detections, img_size, output_path, c
     plt.gca().xaxis.set_major_locator(NullLocator())
     plt.gca().yaxis.set_major_locator(NullLocator())
     filename = os.path.basename(image_path).split(".")[0]
-    output_path = os.path.join(output_path, f"{filename}.png")
+    output_path = os.path.join(output_path, f"/images/{filename}.png")
     plt.savefig(output_path, bbox_inches="tight", pad_inches=0.0)
     plt.close()
 
