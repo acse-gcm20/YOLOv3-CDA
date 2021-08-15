@@ -86,17 +86,17 @@ def save_label_predictions(image_path, preds, output_path, cnt):
 
         if cnt == 1:
             print(preds)
-            state = preds[4]
-            x = preds[0]
-            y = preds[1]
-            w = preds[2]
-            h = preds[3]
-            label = f'{state} {x} {y} {w} {h}\n'
-            label_file.write(label)
+            # state = preds[4]
+            # x = preds[0]
+            # y = preds[1]
+            # w = preds[2]
+            # h = preds[3]
+            # label = f'{state} {x} {y} {w} {h}\n'
+            # label_file.write(label)
         else:
             for pred in preds:
                 label = f'{pred[4]} {pred[0]} {pred[1]} {pred[2]} {pred[3]}\n'
-                label_file.write(label)
+                # label_file.write(label)
 
 def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
     """Inferences one image with model.

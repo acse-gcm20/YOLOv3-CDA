@@ -111,13 +111,15 @@ def get_rects(fname, label_dir):
         labels = f.readlines()
     
     rects = []
+    #[[tensor(307.0753, device='cuda:0'), tensor(22.0186, device='cuda:0'), tensor(57.4753, device='cuda:0'), tensor(56.7293, device='cuda:0'), tensor(0., device='cuda:0')]]
 
     if len(labels[0]) == 1:
-        state = labels[0]
-        w = float(labels[3])*593
-        h = float(labels[4])*593
-        x = float(labels[1])*593 - w/2
-        y = float(labels[2])*593 - h/2
+        label = labels[0]
+        state = label[0]
+        w = float(label[3])*593
+        h = float(label[4])*593
+        x = float(label[1])*593 - w/2
+        y = float(label[2])*593 - h/2
         rects.append([state, x, y, w, h])
     else:
         for label in labels:
