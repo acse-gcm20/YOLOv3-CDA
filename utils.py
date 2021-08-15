@@ -120,24 +120,25 @@ def get_rects(fname, label_dir, img_scale=1, center=True):
         with open(pth, 'r') as f:
             labels = f.readlines()
         
-        if len(labels[0]) == 1:
-            label = labels[0]
+        labels = [label.rstrip('\n') for label in labels]
+
+        # if len(labels[0]) == 1:
+        #     labels = [labels]
+        #     state = label[0]
+        #     w = float(label[3])*img_scale
+        #     h = float(label[4])*img_scale
+        #     x = float(label[1])*img_scale - (w/2 * shift)
+        #     y = float(label[2])*img_scale - (h/2 * shift)
+        #     rects.append([state, x, y, w, h])
+        # else:
+        for label in labels:
+            label = label.split(' ')
             state = label[0]
             w = float(label[3])*img_scale
             h = float(label[4])*img_scale
             x = float(label[1])*img_scale - (w/2 * shift)
             y = float(label[2])*img_scale - (h/2 * shift)
-            rects.append([state, x, y, w, h])
-        else:
-            for label in labels:
-                label = label.rstrip('\n').split(' ')
-                state = label[0]
-                w = float(label[3])*img_scale
-                h = float(label[4])*img_scale
-                x = float(label[1])*img_scale - (w/2 * shift)
-                y = float(label[2])*img_scale - (h/2 * shift)
-                coords = (state, x, y, w, h)
-                rects.append(coords)   
+            rects.append([state, x, y, w, h])   
 
     return rects
 
@@ -165,7 +166,7 @@ def plot_image_dir(image_dir, label_dir, label=True):
             rect = patches.Rectangle((coords[1], coords[2]), coords[3], coords[4], linewidth=2, edgecolor='r', facecolor='none')
             ax.add_patch(rect)
             if label:
-                plt.text(coords[1], coords[2]-10, coords[0])
+                ax.text(coords[1], coords[2]-10, coords[0])
 
     plt.show()
 
