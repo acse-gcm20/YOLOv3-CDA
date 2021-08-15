@@ -82,10 +82,11 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
         img_detections, imgs, img_size, output_path, classes)
 
 def save_label_predictions(image_path, preds, output_path, cnt):
-    label_file = open(output_path+f'/labels/{fname}.txt', 'w')
     
+    fname = os.path.basename(image_path).rstrip('.png\n')
+    label_file = open(output_path+f'/labels/{fname}.txt', 'w')
+
     if cnt != 0:
-        fname = os.path.basename(image_path).rstrip('.png\n')
         
         for pred in preds:
             state = pred[4].cpu().numpy()
