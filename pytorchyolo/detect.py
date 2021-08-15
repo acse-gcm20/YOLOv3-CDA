@@ -66,6 +66,8 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
     """
     print(f'Outputting to: {output_path}')
 
+    # Create output directories, if missing
+    os.makedirs(output_path, exist_ok=True)
     os.makedirs(output_path+'/images/', exist_ok=True)
     os.makedirs(output_path+'/labels/', exist_ok=True)
 
