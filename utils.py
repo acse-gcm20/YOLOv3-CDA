@@ -107,6 +107,7 @@ class PRcurve:
         ax.grid(True)
 
 def get_rects(fname, label_dir, img_scale=1, center=True):
+    """Calcualte the rects from bounding box labels"""
     rects = []
     pth = f'{label_dir}/{fname.rstrip(".png")}.txt'
 
@@ -141,6 +142,7 @@ def get_rects(fname, label_dir, img_scale=1, center=True):
     return rects
 
 def plot_image_dir(image_dir, label_dir, label=True):
+    """Plot a random sample of images from a directory with bounding boxes"""
     imgs = os.listdir(image_dir)
 
     fig = plt.figure(figsize=(16,16))
@@ -168,7 +170,7 @@ def plot_image_dir(image_dir, label_dir, label=True):
     plt.show()
 
 def comparison_plot(img_source, label_source, detections_dir, num):
-
+    """Plot comparisons of ground truth and detected labels"""
     detection_files = os.listdir(detections_dir)
     fnames = [name.rstrip('.txt') for name in detection_files]
 
