@@ -215,7 +215,7 @@ def comparison_plot(img_source, label_source, detections_dir, num):
 
     plt.show()
 
-def list_file_2_dir(list_file, dir)
+def list_file_2_dir(list_file, dir):
     """Read list of images and move images and corresponding labels to desired dir"""
     os.makedirs(dir+'/images/', exist_ok=True)
     os.makedirs(dir+'/labels/', exist_ok=True)
