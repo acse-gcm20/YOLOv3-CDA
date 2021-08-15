@@ -82,10 +82,11 @@ def detect_directory(model_path, weights_path, img_path, classes, output_path,
         img_detections, imgs, img_size, output_path, classes)
 
 def save_label_predictions(image_path, preds, output_path, cnt):
-
+    label_file = open(output_path+f'/labels/{fname}.txt', 'w')
+    
     if cnt != 0:
         fname = os.path.basename(image_path).rstrip('.png\n')
-        label_file = open(output_path+f'/labels/{fname}.txt', 'w')
+        
         for pred in preds:
             state = pred[4].cpu().numpy()
             x = pred[0].cpu().numpy()
@@ -94,7 +95,8 @@ def save_label_predictions(image_path, preds, output_path, cnt):
             h = pred[3].cpu().numpy()
             label = '%i %.3f %.3f %.3f %.3f\n' % (state, x, y, w, h)
             label_file.write(label)
-        label_file.close()
+    
+    label_file.close()
 
 def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
     """Inferences one image with model.
