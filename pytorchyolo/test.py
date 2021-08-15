@@ -32,9 +32,6 @@ class Args:
         self.conf_thres = 0.1
         self.nms_thres = 0.5
 
-def rank_obj_loss(model_path, weights, config, paths):
-
-
 def evaluate_model_file(model_path, weights_path, img_path, class_names, batch_size=8, img_size=416,
                         n_cpu=8, iou_thres=0.5, conf_thres=0.5, nms_thres=0.5, verbose=True):
     """Evaluate model on validation dataset.
