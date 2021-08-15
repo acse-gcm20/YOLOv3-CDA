@@ -25,7 +25,7 @@ from torchsummary import summary
 
 
 class Args:
-    def __init__(model, self, epochs, seed, pretrained_weights, config):
+    def __init__(self, model, epochs, seed, pretrained_weights, config):
         self.model = model
         self.data = config
         self.epochs = epochs
