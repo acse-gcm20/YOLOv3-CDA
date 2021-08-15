@@ -106,29 +106,28 @@ class PRcurve:
         ax.set_ylabel("Precision")
         ax.grid(True)
 
-def get_rects(fname, label_dir):
+def get_rects(fname, label_dir, img_scale=1):
     with open(f'{label_dir}/{fname.rstrip(".png")}.txt', 'r') as f:
         labels = f.readlines()
     
     rects = []
-    #[[tensor(307.0753, device='cuda:0'), tensor(22.0186, device='cuda:0'), tensor(57.4753, device='cuda:0'), tensor(56.7293, device='cuda:0'), tensor(0., device='cuda:0')]]
 
     if len(labels[0]) == 1:
         label = labels[0]
         state = label[0]
-        w = float(label[3])*593
-        h = float(label[4])*593
-        x = float(label[1])*593 - w/2
-        y = float(label[2])*593 - h/2
+        w = float(label[3])*img_scale
+        h = float(label[4])*img_scale
+        x = float(label[1])*img_scale - w/2
+        y = float(label[2])*img_scale - h/2
         rects.append([state, x, y, w, h])
     else:
         for label in labels:
             label = label.rstrip('\n').split(' ')
             state = label[0]
-            w = float(label[3])*593
-            h = float(label[4])*593
-            x = float(label[1])*593 - w/2
-            y = float(label[2])*593 - h/2
+            w = float(label[3])*img_scale
+            h = float(label[4])*img_scale
+            x = float(label[1])*img_scale - w/2
+            y = float(label[2])*img_scale - h/2
             coords = (state, x, y, w, h)
             rects.append(coords)   
 
@@ -138,9 +137,9 @@ def plot_image_list(image_dir, label_dir, label=True):
     imgs = os.listdir(image_dir)
 
     fig = plt.figure(figsize=(16,16))
-
+    max_i = len(os.listdir(image_dir))
     for i in range(16):
-        r = random.randint(0, 139)
+        r = random.randint(0, max_i)
         fname = imgs[r]
         im = Image.open(f'{image_dir}/{fname}')
 
@@ -152,7 +151,7 @@ def plot_image_list(image_dir, label_dir, label=True):
         ax.set_title(fname)
 
         # Create a Rectangle patch
-        rects = get_rects(fname, label_dir)
+        rects = get_rects(fname, label_dir, img_scale=593)
         for coords in rects:
             rect = patches.Rectangle((coords[1], coords[2]), coords[3], coords[4], linewidth=2, edgecolor='r', facecolor='none')
             ax.add_patch(rect)
