@@ -84,7 +84,7 @@ def save_losses(model_path, weights, paths):
 
     loss_df = pd.DataFrame(columns=['img', 'iou_loss', 'obj_loss', 'cls_loss', 'loss'])
 
-    for i, (fname, imgs, targets) in enumerate(dataloader):
+    for i, (fname, imgs, targets) in enumerate(tqdm.tqdm(dataloader)):
         img_name = os.path.basename(fname[0])
         imgs = imgs.to(device, non_blocking=True)
         targets = targets.to(device)
