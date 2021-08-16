@@ -61,22 +61,22 @@ class Dataset:
             shutil.rmtree(f'{self.dest}/labels/')
 
         # Get Dataframe of all classified craters and list of filenames containing them
-        self.craters, self.filenames = generate_df()
+        self.craters, self.filenames = self.generate_df()
 
         # Get good_imgs dataframe of images below loss threshold
-        self.good_imgs = sort_obj_loss()
+        self.good_imgs = self.sort_obj_loss()
 
         # Write good images to list file
         write_image_list(self.good_imgs, self.dest)
 
         if self.clean:
             # Create secondary list of images exclusively containing classified craters
-            clean_list()
-            sort_files(f'{self.dest}/clean_image_list.txt')
+            self.clean_list()
+            self.sort_files(f'{self.dest}/clean_image_list.txt')
         else:
-            sort_files(f'{self.dest}/image_list.txt')
+            self.sort_files(f'{self.dest}/image_list.txt')
             if self.stats:
-                analyse()
+                self.analyse()
 
     def generate_df(self):
         # Read csv containing all processed craters
