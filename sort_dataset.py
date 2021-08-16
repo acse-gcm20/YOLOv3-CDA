@@ -111,9 +111,16 @@ class Dataset:
             class_data = pd.DataFrame({'filename':self.filenames,
                                        'obj_loss':np.zeros(len(self.filenames))})
 
+            cnt = 0
             for i, row in class_data.iterrows():
-                loss = data[data['img']==row['filename']]['obj'].iloc[0]
-                class_data.loc[i, 'obj_loss'] = loss
+                #print(row['filename'])
+                try:
+                    loss = data[data['img']==row['filename']]['obj'].iloc[0]
+                    class_data.loc[i, 'obj_loss'] = loss
+                except:
+                    print(f'Cannot find {row["filename"]} in loss rank')
+                    class_data.loc[i, 'obj_loss'] = 1
+                    cnt+=1            
 
             class_data.sort_values('obj_loss', ascending=True, inplace=True)
             class_data.reset_index(drop=True, inplace=True)
@@ -121,7 +128,7 @@ class Dataset:
             # Generate 'good_imgs' dataframe of images above desired objectness threshold
             threshold_loss = class_data.iloc[int(len(class_data) * self.threshold)]['obj_loss']
             good_imgs = class_data[class_data['obj_loss'] < threshold_loss]
-
+            print('Missed', cnt)
         return good_imgs
 
     def clean_list(self):
@@ -177,7 +184,7 @@ class Dataset:
             # Create new label in classifier directory
             new_label = open(f'{self.dest}/labels/{filename}.txt', 'w')
             # Collect IDs of craters in file
-            ids = craters[craters['filename']==filename]['v1']
+            ids = self.craters[self.craters['filename']==filename]['v1']
 
             # Loop through craters in image and write new label for classified craters
             # Remove labels of unclassified craters
@@ -192,7 +199,7 @@ class Dataset:
                 # replace label with classification and write to new label file
                 if len(line) == 6 and line[-1] in ids.values:
                     new_line = line
-                    row = craters[craters['v1'] == line[-1]].iloc[0]
+                    row = self.craters[self.craters['v1'] == line[-1]].iloc[0]
                     state = (int(row['degradation_state']) - 1) # Subtract one to zero index labels
                     new_line = ' '.join([str(state)] + line[1:]) + '\n'
 
@@ -201,8 +208,9 @@ class Dataset:
 
     def analyse(self):
         # Print dataset information 
-        print(f'Crater Distribution (threshold = {self.threshold})')
+        print('\nCrater Distribution for whole dataset')
         print(self.craters['degradation_state'].value_counts().sort_index().astype(int))
-        print(f'Total craters: {len(self.good_imgs)}')
-        print(f'Total images: {len(self.filenames)}')
+
+        print(f'\n Images in threshold = {self.threshold}')
+        print(f'Total images: {len(self.good_imgs)}')
         print('\n'+self.good_imgs.head())
