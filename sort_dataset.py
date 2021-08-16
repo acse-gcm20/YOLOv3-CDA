@@ -112,7 +112,7 @@ class Dataset:
                                        'obj_loss':np.zeros(len(self.filenames))})
 
             for i, row in class_data.iterrows():
-                loss = data[data['img']==row['img']]['obj'].iloc[0]
+                loss = data[data['img']==row['filename']]['obj'].iloc[0]
                 class_data.loc[i, 'obj_loss'] = loss
 
             class_data.sort_values('obj_loss', ascending=True, inplace=True)
