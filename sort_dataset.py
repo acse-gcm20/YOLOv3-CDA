@@ -159,8 +159,9 @@ class Dataset:
                     else:
                         # Add degradation states to list
                         crater_id = label[-1]
-                        ds = self.craters[self.craters['v1']==crater_id]['degradation_state'].iloc[0]
-                        states.append(ds)
+                        print(crater_id)
+                        deg_state = self.craters[self.craters['v1']==crater_id]['degradation_state'].iloc[0]
+                        states.append(deg_state)
                 if good and True not in np.isnan(states):
                     # Only accept label files which exclusively contain classified craters
                     # Write image name to clean list file
