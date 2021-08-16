@@ -83,7 +83,7 @@ def save_losses(model_path, weights, paths):
 
     dataloader = _create_data_loader(paths, 1, model.hyperparams['height'], 2, shuffle_order=False)
 
-    loss_df = pd.DataFrame(columns=['img', 'iou_loss', 'obj_loss', 'cls_loss', 'loss'])
+    loss_df = pd.DataFrame(columns=['img', 'box', 'obj', 'cls', 'loss'])
 
     for i, (fname, imgs, targets) in enumerate(tqdm.tqdm(dataloader)):
         img_name = os.path.basename(fname[0])
@@ -98,9 +98,9 @@ def save_losses(model_path, weights, paths):
         cls_loss = float(losses[2])
         total = float(losses[3])
         loss_df = loss_df.append({'img': img_name,
-                        'iou_loss': iou,
-                        'obj_loss': obj,
-                        'cls_loss': cls_loss,
+                        'box': iou,
+                        'obj': obj,
+                        'cls': cls_loss,
                         'loss': total}, ignore_index=True)
 
     loss_df.to_csv('loss_table.csv')
