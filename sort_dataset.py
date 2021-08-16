@@ -78,7 +78,7 @@ class Dataset:
             if self.stats:
                 analyse()
 
-    def generate_df(self)
+    def generate_df(self):
         # Read csv containing all processed craters
         data = pd.read_csv(self.crater_dict)
 
