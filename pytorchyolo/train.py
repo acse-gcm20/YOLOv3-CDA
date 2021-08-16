@@ -92,7 +92,7 @@ def save_losses(model_path, weights, paths):
         num_workers=2,
         worker_init_fn=worker_seed_set)
 
-    dataloader = _create_data_loader(paths, 1, , 2)
+    #dataloader = _create_data_loader(paths, 1, , 2)
 
     loss_df = pd.DataFrame(columns=['img', 'iou_loss', 'obj_loss', 'cls_loss', 'loss'])
 
