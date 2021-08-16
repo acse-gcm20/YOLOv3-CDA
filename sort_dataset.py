@@ -80,7 +80,7 @@ class Dataset:
 
     def generate_df(self):
         # Read csv containing all processed craters
-        data = pd.read_csv(self.crater_dict)
+        data = pd.read_csv(self.crater_dict_csv)
 
         # Remove craters without deg_state and remove duplicates
         craters = data[data['degradation_state'].notnull()].drop_duplicates(subset='v1').drop('Unnamed: 0', axis=1)
