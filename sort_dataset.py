@@ -202,7 +202,7 @@ class Dataset:
                     with open(f'{self.dest}/labels/{filename}.txt', 'w') as new_label:
                         new_label.write(new_line)
 
-    def analyse():
+    def analyse(self):
         # Print dataset information 
         print(f'Crater Distribution (threshold = {self.threshold})')
         print(self.good_imgs['degradation_state'].value_counts().sort_index().astype(int))
