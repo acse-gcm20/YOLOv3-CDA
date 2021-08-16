@@ -78,9 +78,21 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu,
 
 def save_losses(model_path, weights, paths):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     model = load_model(model_path, weights)
-    dataloader = _create_data_loader(paths, 1, model.hyperparams['height'], 2)
+
+    dataset = ListDataset(
+        img_path,
+        img_size=model.hyperparams['height'],
+        multiscale=False)
+
+    dataloader = DataLoader(
+        dataset,
+        batch_size=1,
+        shuffle=False,
+        num_workers=2,
+        worker_init_fn=worker_seed_set)
+
+    dataloader = _create_data_loader(paths, 1, , 2)
 
     loss_df = pd.DataFrame(columns=['img', 'iou_loss', 'obj_loss', 'cls_loss', 'loss'])
 
