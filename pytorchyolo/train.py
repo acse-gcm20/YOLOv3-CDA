@@ -82,7 +82,7 @@ def save_losses(model_path, weights, paths):
 
     dataset = ListDataset(
         paths,
-        img_size=model.hyperparams['height'],
+        img_size=593,
         multiscale=False,
         transform=AUGMENTATION_TRANSFORMS)
 
