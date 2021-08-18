@@ -232,4 +232,6 @@ class Dataset:
 
         print(f'Images: {num_imgs}\nCraters: {num_lbls}')
 
+        subset = self.craters[self.craters['filenames'] in imgs]['degradation_state']
+        print(subset)
 
