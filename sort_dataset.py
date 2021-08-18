@@ -227,7 +227,7 @@ class Dataset:
         fnames = [fname.split('.')[0] for fname in imgs]
         num_lbls = 0
         for fname in fnames:
-            with open(f'{self.source_dir}/labels/{fname}.txt') as f:
+            with open(f'{self.dest}/labels/{fname}.txt') as f:
                 num_lbls += len(f.readlines())
 
         print(f'Images: {num_imgs}\nCraters: {num_lbls}')
