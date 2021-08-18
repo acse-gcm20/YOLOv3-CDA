@@ -146,6 +146,7 @@ class Dataset:
                 labels = label_file.readlines()
             
             states = []
+            missed = 0
             good = True
             while good:
                 for label in labels:
@@ -157,11 +158,11 @@ class Dataset:
                     else:
                         # Add degradation states to list
                         crater_id = label[-1]
-                        print('Crater ID:', crater_id)
                         try:
                             deg_state = self.craters[self.craters['v1']==crater_id]['degradation_state'].iloc[0]
                             states.append(deg_state)
                         except:
+                            missed += 1
                             good = False
                 if good and True not in np.isnan(states):
                     # Only accept label files which exclusively contain classified craters
@@ -170,7 +171,7 @@ class Dataset:
                     cnt +=1
                     break
 
-        print(f'\n{cnt} images in {self.dest}/clean_image_list.txt\n')
+        print(f'\n{cnt} images in {self.dest}/clean_image_list.txt\nMissed: {missed}\n')
         clean_img_file.close()
 
     def sort_files(self, img_list_path):
