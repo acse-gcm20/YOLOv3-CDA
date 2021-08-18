@@ -112,7 +112,6 @@ class Dataset:
 
             cnt = 0
             for i, row in class_data.iterrows():
-                #print(row['filename'])
                 try:
                     loss = data[data['img']==row['filename']]['obj'].iloc[0]
                     class_data.loc[i, 'obj_loss'] = loss
