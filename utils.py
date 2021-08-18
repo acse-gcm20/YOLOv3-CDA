@@ -122,15 +122,6 @@ def get_rects(fname, label_dir, img_scale=1, center=True):
         
         labels = [label.rstrip('\n') for label in labels]
 
-        # if len(labels[0]) == 1:
-        #     labels = [labels]
-        #     state = label[0]
-        #     w = float(label[3])*img_scale
-        #     h = float(label[4])*img_scale
-        #     x = float(label[1])*img_scale - (w/2 * shift)
-        #     y = float(label[2])*img_scale - (h/2 * shift)
-        #     rects.append([state, x, y, w, h])
-        # else:
         for label in labels:
             label = label.split(' ')
             state = label[0]
@@ -149,7 +140,7 @@ def plot_image_dir(image_dir, label_dir, label=True):
     fig = plt.figure(figsize=(16,16))
     max_i = len(os.listdir(image_dir))
     for i in range(16):
-        r = random.randint(0, max_i)
+        r = random.randint(0, max_i-1)
         fname = imgs[r]
         im = Image.open(f'{image_dir}/{fname}')
 

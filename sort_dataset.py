@@ -35,7 +35,7 @@ def write_image_list(imgs, dest):
 class Dataset:
     """Sort a dataset in preparation for training a classifier"""
     def __init__(self, crater_dict_csv, loss_csv, threshold, dest,
-                 source_dir, stats=True, clean=False):
+                 source_dir, clean=False):
         self.crater_dict_csv = crater_dict_csv # Path to csv file of all craters
         self.loss_csv = loss_csv    # Path to csv file containing losses
         self.threshold = threshold  # desired object loss threshold
@@ -75,8 +75,8 @@ class Dataset:
             self.sort_files(f'{self.dest}/clean_image_list.txt')
         else:
             self.sort_files(f'{self.dest}/image_list.txt')
-            if self.stats:
-                self.analyse()
+
+        self.analyse()
 
     def generate_df(self):
         # Read csv containing all processed craters
@@ -209,9 +209,25 @@ class Dataset:
 
     def analyse(self):
         # Print dataset information 
-        print('\nCrater Distribution for whole dataset')
-        print(self.craters['degradation_state'].value_counts().sort_index().astype(int))
+        if self.clean:
+            img_list = f'{self.dest}/clean_image_list.txt'
+        else:
+            img_list = f'{self.dest}/image_list.txt'
 
-        print(f'\n Images in threshold = {self.threshold}')
-        print(f'Total images: {len(self.good_imgs)}')
-        print('\n'+self.good_imgs.head())
+        print(f'\n--- Evaluating {img_list} ---\n')
+
+        with open(img_list, 'r') as f:
+            imgs = f.readlines()
+
+        imgs = [img.rstrip(' \n') for img in imgs]
+        num_imgs = len(imgs)
+
+        fnames = [fname.split('.')[0] for fname in imgs]
+        num_lbls = 0
+        for fname in fnames:
+            with open(f'{self.source_dir}/labels/{fname}.txt') as f:
+                num_lbls += len(f.readlines())
+
+        print(f'Images: {num_imgs}\nLabels: {num_lbls}')
+
+
