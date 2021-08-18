@@ -40,7 +40,6 @@ class Dataset:
         self.loss_csv = loss_csv    # Path to csv file containing losses
         self.threshold = threshold  # desired object loss threshold
         self.dest = dest # Destination directory e.g. 'data/Robbins/classifier'
-        self.stats = stats  # Print statisics about dataset
         self.clean = clean
         self.source_dir = source_dir # Directory of original labels
 
