@@ -207,6 +207,8 @@ class Dataset:
                     #with open(f'{self.dest}/labels/{filename}.txt', 'a') as new_label:
                     new_label.write(new_line)
 
+            new_label.close()
+
     def analyse(self):
         # Print dataset information 
         if self.clean:
