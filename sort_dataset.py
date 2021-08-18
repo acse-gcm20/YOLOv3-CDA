@@ -183,6 +183,7 @@ class Dataset:
 
             # Create new label in classifier directory
             new_label = open(f'{self.dest}/labels/{filename}.txt', 'w')
+
             # Collect IDs of craters in file
             ids = self.craters[self.craters['filename']==filename]['v1']
 
@@ -203,8 +204,8 @@ class Dataset:
                     state = (int(row['degradation_state']) - 1) # Subtract one to zero index labels
                     new_line = ' '.join([str(state)] + line[1:]) + '\n'
 
-                    with open(f'{self.dest}/labels/{filename}.txt', 'w') as new_label:
-                        new_label.write(new_line)
+                    #with open(f'{self.dest}/labels/{filename}.txt', 'a') as new_label:
+                    new_label.write(new_line)
 
     def analyse(self):
         # Print dataset information 
@@ -213,7 +214,7 @@ class Dataset:
         else:
             img_list = f'{self.dest}/image_list.txt'
 
-        print(f'\n--- Evaluating {img_list} ---\n')
+        print(f'\n\n--- Evaluating {img_list} ---')
 
         with open(img_list, 'r') as f:
             imgs = f.readlines()
@@ -227,6 +228,6 @@ class Dataset:
             with open(f'{self.source_dir}/labels/{fname}.txt') as f:
                 num_lbls += len(f.readlines())
 
-        print(f'Images: {num_imgs}\nLabels: {num_lbls}')
+        print(f'Images: {num_imgs}\nCraters: {num_lbls}')
 
 
