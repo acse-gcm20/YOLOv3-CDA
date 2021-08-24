@@ -274,7 +274,6 @@ def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, confi
             verbose=args.verbose)
 
         precision, recall, AP, f1, ap_class = metrics_output
-        #print("Precision: {}, Recall: {}".format(precision.mean(), recall.mean()))
         precisionVals.append(precision.mean())
         recallVals.append(recall.mean())
         mAPs.append(AP.mean())
