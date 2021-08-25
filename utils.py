@@ -137,7 +137,7 @@ def plot_image_dir(image_dir, label_dir, label=True, save_path=None):
     """Plot a random sample of images from a directory with bounding boxes"""
     imgs = os.listdir(image_dir)
 
-    fig = plt.figure(figsize=(10,15))
+    fig = plt.figure(figsize=(12,8))
     max_i = len(os.listdir(image_dir))
     for i in range(6):
         r = random.randint(0, max_i-1)
