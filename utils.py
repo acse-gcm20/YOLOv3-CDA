@@ -23,6 +23,30 @@ def list_to_file(list_array, filename):
             vals = [list_array[col][row] for col in range(cols)]
             f.write(("{} "*cols+'\n').format(*vals))
 
+def plot_loss(stats_file, save_path=None):
+    training_losses = []
+    validation_losses = []
+
+    with open(stats_file) as f:
+        for line in f:
+            training_losses.append(float(line.rstrip("\n").split()[0]))
+            validation_losses.append(float(line.rstrip("\n").split()[1]))
+
+    epochs = len(training_losses)
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+
+    ax.plot(range(1, epochs+1), training_losses, label="Training Loss")
+    ax.plot(range(1, epochs+1), validation_losses, '--', label="Validation Loss")
+    ax.set_xlim(1, epochs)
+    ax.set_xlabel("Epoch")
+    ax.set_ylabel("Loss")
+    ax.legend()
+    ax.grid(True)
+
+    if save_path is not None:
+        fig.savefig(save_path, bbox_inches='tight')
+
 # Statistics utility functions
 def plot_stats(stats_file, save_path=None):
     training_losses = []
