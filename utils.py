@@ -24,7 +24,7 @@ def list_to_file(list_array, filename):
             f.write(("{} "*cols+'\n').format(*vals))
 
 # Statistics utility functions
-def plot_stats(stats_file):
+def plot_stats(stats_file, save_file=None):
     training_losses = []
     validation_losses = []
     precision_vals = []
@@ -75,6 +75,9 @@ def plot_stats(stats_file):
     axs[1,1].set_ylabel("Precision")
     axs[1,1].grid(True)
 
+    if save_path is not None:
+        fig.savefig(save_path, bbox_inches='tight')
+
 # Class to calculate, save and plot Precision-Recall curves
 class PRcurve:
     def __init__(self, weights_path, start=0.05, stop=0.5, n=10):
@@ -95,7 +98,7 @@ class PRcurve:
     def save_stats(self, filename):
         list_to_file([self.precisions, self.recalls], filename)
 
-    def plot(self):
+    def plot(self, save_path=None):
         fig, ax = plt.subplots(1, 1, figsize=(8, 8))
 
         ax.plot(self.recalls, self.precisions)
@@ -105,6 +108,9 @@ class PRcurve:
         ax.set_xlabel("Recall")
         ax.set_ylabel("Precision")
         ax.grid(True)
+
+        if save_path is not None:
+            fig.savefig(save_path, bbox_inches='tight')
 
 def get_rects(fname, label_dir, img_scale=1, center=True):
     """Calcualte the rects from bounding box labels"""
@@ -162,9 +168,9 @@ def plot_image_dir(image_dir, label_dir, label=True, save_path=None):
     plt.show()
 
     if save_path is not None:
-        fig.savefig(save_path)
+        fig.savefig(save_path, bbox_inches='tight')
 
-def comparison_plot(img_source, label_source, detections_dir, num):
+def comparison_plot(img_source, label_source, detections_dir, num, save_path=None):
     """Plot comparisons of ground truth and detected labels"""
     detection_files = os.listdir(detections_dir)
     fnames = [name.rstrip('.txt') for name in detection_files]
@@ -209,6 +215,9 @@ def comparison_plot(img_source, label_source, detections_dir, num):
             break
 
     plt.show()
+
+    if save_path is not None:
+        fig.savefig(save_path, bbox_inches='tight')
 
 def list_file_2_dir(list_file, dir):
     """Read list of images and move images and corresponding labels to desired dir"""
