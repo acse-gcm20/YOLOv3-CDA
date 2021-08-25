@@ -34,7 +34,7 @@ def plot_loss(stats_file, save_path=None):
 
     epochs = len(training_losses)
 
-    fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+    fig, ax = plt.subplots(1, 1, figsize=(7, 7))
 
     ax.plot(range(1, epochs+1), training_losses, label="Training Loss")
     ax.plot(range(1, epochs+1), validation_losses, '--', label="Validation Loss")
@@ -68,7 +68,7 @@ def plot_stats(stats_file, save_path=None):
 
     epochs = len(training_losses)
 
-    fig, axs = plt.subplots(2, 2, figsize=(16, 16))
+    fig, axs = plt.subplots(2, 2, figsize=(7, 8))
 
     axs[0,0].plot(range(1, epochs+1), training_losses, label="Training Loss")
     axs[0,0].plot(range(1, epochs+1), validation_losses, '--', label="Validation Loss")
@@ -123,7 +123,7 @@ class PRcurve:
         list_to_file([self.precisions, self.recalls], filename)
 
     def plot(self, save_path=None):
-        fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+        fig, ax = plt.subplots(1, 1, figsize=(7, 7))
 
         ax.plot(self.recalls, self.precisions)
         ax.set_title("Validation Set Precision-Recall Curve, AUC = %.2f" % self.auc_score)
@@ -167,7 +167,7 @@ def plot_image_dir(image_dir, label_dir, label=True, save_path=None):
     """Plot a random sample of images from a directory with bounding boxes"""
     imgs = os.listdir(image_dir)
 
-    fig = plt.figure(figsize=(12,8))
+    fig = plt.figure(figsize=(7,12))
     max_i = len(os.listdir(image_dir))
     for i in range(6):
         r = random.randint(0, max_i-1)
@@ -175,7 +175,7 @@ def plot_image_dir(image_dir, label_dir, label=True, save_path=None):
         im = Image.open(f'{image_dir}/{fname}')
 
         # Create figure and axes
-        ax = fig.add_subplot(2,3,i+1)
+        ax = fig.add_subplot(3,2,i+1)
 
         # Display the image
         ax.imshow(im)
@@ -203,7 +203,7 @@ def comparison_plot(img_source, label_source, detections_dir, num, save_path=Non
     label_files = [f'{label_source}/{name}.txt' for name in fnames]
     detections = [f'{detections_dir}/{name}.txt' for name in fnames]
 
-    fig, axs = plt.subplots(num, 2, figsize=(12, 6*num))
+    fig, axs = plt.subplots(num, 2, figsize=(7, 4*num))
 
     #for i, (img, label, detection) in enumerate(zip(images, label_files, detections)):
     for i in range(num):
