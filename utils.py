@@ -47,7 +47,7 @@ def plot_stats(stats_file, save_path=None):
     fig, axs = plt.subplots(2, 2, figsize=(16, 16))
 
     axs[0,0].plot(range(1, epochs+1), training_losses, label="Training Loss")
-    axs[0,0].plot(range(1, epochs+1), validation_losses, label="Validation Loss")
+    axs[0,0].plot(range(1, epochs+1), validation_losses, '--', label="Validation Loss")
     axs[0,0].set_xlim(1, epochs)
     axs[0,0].set_xlabel("Epoch")
     axs[0,0].set_ylabel("Loss")
