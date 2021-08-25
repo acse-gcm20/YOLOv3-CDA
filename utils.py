@@ -34,7 +34,7 @@ def plot_loss(stats_file, save_path=None):
 
     epochs = len(training_losses)
 
-    fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(4, 4))
 
     ax.plot(range(1, epochs+1), training_losses, label="Training Loss")
     ax.plot(range(1, epochs+1), validation_losses, '--', label="Validation Loss")
