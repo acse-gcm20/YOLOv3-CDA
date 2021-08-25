@@ -24,7 +24,7 @@ def list_to_file(list_array, filename):
             f.write(("{} "*cols+'\n').format(*vals))
 
 # Statistics utility functions
-def plot_stats(stats_file, save_file=None):
+def plot_stats(stats_file, save_path=None):
     training_losses = []
     validation_losses = []
     precision_vals = []
