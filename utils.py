@@ -183,7 +183,7 @@ def comparison_plot(img_source, label_source, detections_dir, num, save_path=Non
 
     #for i, (img, label, detection) in enumerate(zip(images, label_files, detections)):
     for i in range(num):
-        r = random.randint(0, num-1)
+        r = random.randint(0, len(os.listdir(img_source))-1)
         img = images[r]
         label = label_files[r]
         detection = detections[r]
