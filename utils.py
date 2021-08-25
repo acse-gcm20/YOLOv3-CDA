@@ -133,7 +133,7 @@ def get_rects(fname, label_dir, img_scale=1, center=True):
 
     return rects
 
-def plot_image_dir(image_dir, label_dir, label=True):
+def plot_image_dir(image_dir, label_dir, label=True, save_path=None):
     """Plot a random sample of images from a directory with bounding boxes"""
     imgs = os.listdir(image_dir)
 
@@ -160,6 +160,9 @@ def plot_image_dir(image_dir, label_dir, label=True):
                 ax.text(coords[1], coords[2]-10, coords[0])
 
     plt.show()
+
+    if save_path is not None:
+        plt.savefig(save_path)
 
 def comparison_plot(img_source, label_source, detections_dir, num):
     """Plot comparisons of ground truth and detected labels"""
