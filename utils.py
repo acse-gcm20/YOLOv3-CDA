@@ -181,7 +181,10 @@ def comparison_plot(img_source, label_source, detections_dir, num, save_path=Non
 
     fig, axs = plt.subplots(num, 2, figsize=(12, 6*num))
 
-    for i, (img, label, detection) in enumerate(zip(images, label_files, detections)):
+    #for i, (img, label, detection) in enumerate(zip(images, label_files, detections)):
+    for i in range(num):
+        r = random.randint(0, num-1)
+        img, label, detection = zip(images, label_files, detections)[r]
         
         fname = os.path.basename(img).rstrip('.png')
         im = Image.open(img)
@@ -211,8 +214,8 @@ def comparison_plot(img_source, label_source, detections_dir, num, save_path=Non
             if label:
                 ax[1].text(coords[1], coords[2]-8, coords[0], color='b', fontsize=12, fontweight='bold')
 
-        if i == num-1:
-            break
+        # if i == num-1:
+        #     break
 
     plt.show()
 
