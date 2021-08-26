@@ -104,7 +104,7 @@ def plot_stats(stats_file, save_path=None):
 
 # Class to calculate, save and plot Precision-Recall curves
 class PRcurve:
-    def __init__(self, model, weights_path, valid_file start=0.05, stop=0.5, n=10):
+    def __init__(self, model, weights_path, valid_file, start=0.05, stop=0.5, n=10):
         self.confs = np.linspace(start, stop, num=n)
         self.precisions = []
         self.recalls = []
