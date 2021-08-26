@@ -262,8 +262,8 @@ def list_file_2_dir(list_file, dir):
         lbl_dir = img_dir.rstrip('images')+'labels'
         lbl = img.rstrip('png')+'txt'
 
-        os.system(f'cp {img_dir}/{img} data/test_set/images')
-        os.system(f'cp {lbl_dir}/{lbl} data/test_set/labels')
+        os.system(f'cp {img_dir}/{img} {dir}/images')
+        os.system(f'cp {lbl_dir}/{lbl} {dir}/labels')
 
-    print(f'{len(os.listdir("data/test_set/images/"))} images')
-    print(f'{len(os.listdir("data/test_set/labels/"))} labels')
+    print(f'{len(os.listdir("{dir}/images/"))} images')
+    print(f'{len(os.listdir("{dir}/labels/"))} labels')
