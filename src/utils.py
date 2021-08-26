@@ -265,5 +265,5 @@ def list_file_2_dir(list_file, dir):
         os.system(f'cp {img_dir}/{img} {dir}/images')
         os.system(f'cp {lbl_dir}/{lbl} {dir}/labels')
 
-    print(f'{len(os.listdir("{dir}/images/"))} images')
-    print(f'{len(os.listdir("{dir}/labels/"))} labels')
+    print(f'{len(os.listdir(f"{dir}/images/"))} images')
+    print(f'{len(os.listdir(f"{dir}/labels/"))} labels')
