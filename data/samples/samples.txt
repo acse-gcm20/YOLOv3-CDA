@@ -1,0 +1,10 @@
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/aeolis_40_1.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/aeolis_42_5.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/aeolis_43_5.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/aeolis_54_5.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/amazonis_10_2.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/amazonis_10_26.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/amazonis_10_8.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/amazonis_25_1.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/amazonis_7_15.png
+/content/YOLOv3-CDA/data/Benedix/crater_data/images/amazonis_8_14.png
