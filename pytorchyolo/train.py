@@ -106,7 +106,7 @@ def save_losses(model_path, weights, paths):
     loss_df.to_csv('loss_table.csv')
     print('Loss table saved to loss_table.csv')
 
-def run(model, epochs, seed=42, pretrained_weights=None, append_file=None, config='config/custom.data', show_loss=False):
+def run(model, epochs, config, seed=42, pretrained_weights=None, append_file=None, show_loss=False):
     print("Training\n")
     args = Args(model, epochs, seed, pretrained_weights, config)
     print(f"Parameters: \nEpochs: {args.epochs}, Seed: {args.seed}")
