@@ -104,14 +104,14 @@ def plot_stats(stats_file, save_path=None):
 
 # Class to calculate, save and plot Precision-Recall curves
 class PRcurve:
-    def __init__(self, weights_path, start=0.05, stop=0.5, n=10):
+    def __init__(self, model, weights_path, valid_file start=0.05, stop=0.5, n=10):
         self.confs = np.linspace(start, stop, num=n)
         self.precisions = []
         self.recalls = []
 
         for i, conf in enumerate(self.confs):
             print("\n%i/%i: Confidence Threshold = %.3f" % (i+1, n, conf))
-            metrics = evaluate_model_file('yolov3.cfg', weights_path, 'data/valid.txt', ['crater'], batch_size=32, n_cpu=2, conf_thres=conf, verbose=False)
+            metrics = evaluate_model_file(model, weights_path, valid_file, ['crater'], batch_size=32, n_cpu=2, conf_thres=conf, verbose=False)
             self.precisions.append(float(np.mean(metrics[0])))
             self.recalls.append(float(np.mean(metrics[1])))
             print("Precision = %.3f, Recall = %.3f" % (np.mean(metrics[0]), np.mean(metrics[1])))

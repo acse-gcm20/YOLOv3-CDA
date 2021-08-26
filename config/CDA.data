@@ -1,4 +1,4 @@
 classes= 1
-train=data/train.txt
-valid=data/valid.txt
+train=data/combined_train.txt
+valid=data/combined_valid.txt
 names=data/CDA.names
